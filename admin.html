@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow"
+    >
+
+    <title>Hanuman Cars | Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="admin.css"
+    >
+</head>
+
+
+<body>
+
+    <!-- ==========================================
+         ADMIN HEADER
+         ========================================== -->
+
+    <header class="admin-header">
+
+        <div class="admin-brand">
+
+            <span class="brand-main">
+                HANUMAN
+            </span>
+
+            <span class="brand-sub">
+                CARS
+            </span>
+
+            <span class="admin-label">
+                ADMIN
+            </span>
+
+        </div>
+
+
+        <a
+            href="index.html"
+            class="view-site"
+        >
+            View Website ↗
+        </a>
+
+    </header>
+
+
+
+    <!-- ==========================================
+         LOGIN SCREEN
+         ========================================== -->
+
+    <main>
+
+        <section
+            class="login-section"
+            id="loginSection"
+        >
+
+            <div class="login-card">
+
+                <div class="lock-icon">
+                    🔐
+                </div>
+
+
+                <p class="eyebrow">
+                    HANUMAN CARS
+                </p>
+
+
+                <h1>
+                    Admin Login
+                </h1>
+
+
+                <p class="login-description">
+                    Enter your admin key to manage
+                    the cars displayed on the website.
+                </p>
+
+
+                <form id="loginForm">
+
+                    <label for="adminKey">
+                        Admin Key
+                    </label>
+
+
+                    <div class="key-input">
+
+                        <input
+                            type="password"
+                            id="adminKey"
+                            name="adminKey"
+                            placeholder="Enter admin key"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <button
+                            type="button"
+                            id="toggleKey"
+                            class="icon-button"
+                            aria-label="Show admin key"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+
+                    <p
+                        class="error-message"
+                        id="loginError"
+                    ></p>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary login-button"
+                    >
+                        Enter Admin Panel
+                    </button>
+
+                </form>
+
+
+                <p class="security-note">
+                    Admin access is restricted.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ======================================
+             DASHBOARD
+             ====================================== -->
+
+        <section
+            class="dashboard"
+            id="dashboard"
+            hidden
+        >
+
+            <div class="container">
+
+
+                <!-- ==================================
+                     DASHBOARD TOP
+                     ================================== -->
+
+                <div class="dashboard-top">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            MANAGEMENT
+                        </p>
+
+                        <h1>
+                            Car Dashboard
+                        </h1>
+
+                        <p class="dashboard-description">
+                            Add, edit and remove cars
+                            shown on the public website.
+                        </p>
+
+                    </div>
+
+
+                    <div class="dashboard-actions">
+
+                        <button
+                            class="btn btn-primary"
+                            id="addCarButton"
+                        >
+                            + Add New Car
+                        </button>
+
+
+                        <button
+                            class="btn btn-danger-outline"
+                            id="deleteSelectedButton"
+                        >
+                            Delete Selected
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     DASHBOARD STATS
+                     ================================== -->
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <span class="stat-label">
+                            Total Cars
+                        </span>
+
+                        <strong
+                            class="stat-value"
+                            id="totalCars"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <span class="stat-label">
+                            Available
+                        </span>
+
+                        <strong
+                            class="stat-value"
+                            id="availableCars"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <span class="stat-label">
+                            Selected
+                        </span>
+
+                        <strong
+                            class="stat-value"
+                            id="selectedCars"
+                        >
+                            0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     CAR MANAGEMENT
+                     ================================== -->
+
+                <div class="management-card">
+
+
+                    <div class="management-header">
+
+                        <div>
+
+                            <h2>
+                                Your Cars
+                            </h2>
+
+                            <p>
+                                Manage the vehicles currently
+                                listed on Hanuman Cars.
+                            </p>
+
+                        </div>
+
+
+                        <div class="search-box">
+
+                            <input
+                                type="search"
+                                id="carSearch"
+                                placeholder="Search cars..."
+                                aria-label="Search cars"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         CAR TABLE
+                         ================================== -->
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th class="check-column">
+
+                                        <input
+                                            type="checkbox"
+                                            id="selectAllCars"
+                                            aria-label="Select all cars"
+                                        >
+
+                                    </th>
+
+
+                                    <th>
+                                        Car
+                                    </th>
+
+
+                                    <th>
+                                        Year
+                                    </th>
+
+
+                                    <th>
+                                        Fuel
+                                    </th>
+
+
+                                    <th>
+                                        KM
+                                    </th>
+
+
+                                    <th>
+                                        Price
+                                    </th>
+
+
+                                    <th>
+                                        Status
+                                    </th>
+
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="carTableBody">
+
+                                <!--
+                                    JavaScript will insert
+                                    car rows here.
+                                -->
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- Empty state -->
+
+                    <div
+                        class="table-empty"
+                        id="tableEmpty"
+                        hidden
+                    >
+
+                        <div class="empty-icon">
+                            🚗
+                        </div>
+
+                        <h3>
+                            No cars found
+                        </h3>
+
+                        <p>
+                            Add your first car to
+                            start building your listings.
+                        </p>
+
+                        <button
+                            class="btn btn-primary"
+                            id="emptyAddButton"
+                        >
+                            + Add New Car
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==========================================
+             ADD / EDIT CAR MODAL
+             ========================================== -->
+
+        <div
+            class="modal"
+            id="carModal"
+            hidden
+        >
+
+            <div
+                class="modal-overlay"
+                id="modalOverlay"
+            ></div>
+
+
+            <div
+                class="modal-card"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modalTitle"
+            >
+
+                <!-- Modal Header -->
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            CAR LISTING
+                        </p>
+
+                        <h2 id="modalTitle">
+                            Add New Car
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="close-button"
+                        id="closeModal"
+                        aria-label="Close"
+                    >
+                        ✕
+                    </button>
+
+                </div>
+
+
+
+                <!-- ==================================
+                     CAR FORM
+                     ================================== -->
+
+                <form id="carForm">
+
+
+                    <!-- Hidden ID -->
+
+                    <input
+                        type="hidden"
+                        id="carId"
+                    >
+
+
+
+                    <!-- ==================================
+                         BASIC INFORMATION
+                         ================================== -->
+
+                    <div class="form-section">
+
+                        <h3>
+                            Basic Information
+                        </h3>
+
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label for="carBrand">
+                                    Brand *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="carBrand"
+                                    placeholder="e.g. Hyundai"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carModel">
+                                    Model *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="carModel"
+                                    placeholder="e.g. Creta"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carVariant">
+                                    Variant
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="carVariant"
+                                    placeholder="e.g. SX"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carYear">
+                                    Manufacturing / Model Year *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="carYear"
+                                    min="1900"
+                                    max="2100"
+                                    placeholder="e.g. 2022"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         VEHICLE DETAILS
+                         ================================== -->
+
+                    <div class="form-section">
+
+                        <h3>
+                            Vehicle Details
+                        </h3>
+
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label for="carFuel">
+                                    Fuel Type
+                                </label>
+
+                                <select id="carFuel">
+
+                                    <option value="">
+                                        Select fuel
+                                    </option>
+
+                                    <option value="Petrol">
+                                        Petrol
+                                    </option>
+
+                                    <option value="Diesel">
+                                        Diesel
+                                    </option>
+
+                                    <option value="CNG">
+                                        CNG
+                                    </option>
+
+                                    <option value="Electric">
+                                        Electric
+                                    </option>
+
+                                    <option value="Hybrid">
+                                        Hybrid
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carTransmission">
+                                    Transmission
+                                </label>
+
+                                <select id="carTransmission">
+
+                                    <option value="">
+                                        Select transmission
+                                    </option>
+
+                                    <option value="Manual">
+                                        Manual
+                                    </option>
+
+                                    <option value="Automatic">
+                                        Automatic
+                                    </option>
+
+                                    <option value="AMT">
+                                        AMT
+                                    </option>
+
+                                    <option value="CVT">
+                                        CVT
+                                    </option>
+
+                                    <option value="DCT">
+                                        DCT
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carKm">
+                                    Kilometres
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="carKm"
+                                    placeholder="e.g. 32,000 km"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carOwners">
+                                    Number of Owners
+                                </label>
+
+                                <select id="carOwners">
+
+                                    <option value="">
+                                        Select
+                                    </option>
+
+                                    <option value="1">
+                                        1st Owner
+                                    </option>
+
+                                    <option value="2">
+                                        2nd Owner
+                                    </option>
+
+                                    <option value="3">
+                                        3rd Owner
+                                    </option>
+
+                                    <option value="4">
+                                        4th Owner
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carRegistration">
+                                    Registration
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="carRegistration"
+                                    placeholder="e.g. AP"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carInsurance">
+                                    Insurance
+                                </label>
+
+                                <select id="carInsurance">
+
+                                    <option value="">
+                                        Select
+                                    </option>
+
+                                    <option value="Available">
+                                        Available
+                                    </option>
+
+                                    <option value="Expired">
+                                        Expired
+                                    </option>
+
+                                    <option value="Not Available">
+                                        Not Available
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="carLocation">
+                                    Location
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="carLocation"
+                                    value="Vijayawada"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         PRICE
+                         ================================== -->
+
+                    <div class="form-section">
+
+                        <h3>
+                            Price
+                        </h3>
+
+
+                        <div class="price-option">
+
+                            <label class="radio-option">
+
+                                <input
+                                    type="radio"
+                                    name="priceType"
+                                    value="show"
+                                    id="priceShow"
+                                    checked
+                                >
+
+                                <span>
+                                    Show Price
+                                </span>
+
+                            </label>
+
+
+                            <label class="radio-option">
+
+                                <input
+                                    type="radio"
+                                    name="priceType"
+                                    value="contact"
+                                    id="priceContact"
+                                >
+
+                                <span>
+                                    Contact for Price
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div
+                            class="form-group"
+                            id="priceInputGroup"
+                        >
+
+                            <label for="carPrice">
+                                Price
+                            </label>
+
+                            <input
+                                type="text"
+                                id="carPrice"
+                                placeholder="e.g. ₹12.50 Lakh"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         PHOTOS
+                         ================================== -->
+
+                    <div class="form-section">
+
+                        <div class="section-title-row">
+
+                            <div>
+
+                                <h3>
+                                    Car Photos
+                                </h3>
+
+                                <p>
+                                    Add up to 10 photos.
+                                </p>
+
+                            </div>
+
+                            <span
+                                class="photo-count"
+                                id="photoCount"
+                            >
+                                0 / 10
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="photo-upload"
+                            id="photoUpload"
+                        >
+
+                            <input
+                                type="file"
+                                id="carPhotos"
+                                accept="image/*"
+                                multiple
+                                hidden
+                            >
+
+
+                            <label
+                                for="carPhotos"
+                                class="upload-label"
+                            >
+
+                                <span class="upload-icon">
+                                    📷
+                                </span>
+
+                                <strong>
+                                    Add Car Photos
+                                </strong>
+
+                                <small>
+                                    Click to select images
+                                </small>
+
+                            </label>
+
+                        </div>
+
+
+                        <div
+                            class="photo-preview"
+                            id="photoPreview"
+                        ></div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         DESCRIPTION
+                         ================================== -->
+
+                    <div class="form-section">
+
+                        <h3>
+                            Description
+                        </h3>
+
+
+                        <div class="form-group">
+
+                            <label for="carDescription">
+                                Description
+                            </label>
+
+                            <textarea
+                                id="carDescription"
+                                rows="5"
+                                placeholder="Write details about this car..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ==================================
+                         FORM STATUS
+                         ================================== -->
+
+                    <div
+                        class="form-message"
+                        id="formMessage"
+                    ></div>
+
+
+
+                    <!-- ==================================
+                         MODAL ACTIONS
+                         ================================== -->
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            id="cancelCar"
+                        >
+                            Cancel
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="saveCar"
+                        >
+                            Save Car
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
+    <script src="admin.js"></script>
+
+</body>
+
+</html>

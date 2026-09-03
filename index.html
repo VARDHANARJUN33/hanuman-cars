@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Hanuman Cars - Quality used cars in Gangur, Vijayawada."
+    >
+
+    <meta
+        name="robots"
+        content="index, follow"
+    >
+
+    <title>Hanuman Cars | Used Cars in Vijayawada</title>
+
+
+    <!-- ==========================================
+         MAIN WEBSITE CSS
+         ========================================== -->
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
+
+    <header class="site-header">
+
+
+        <!-- Brand -->
+
+        <a
+            class="brand"
+            href="index.html"
+            aria-label="Hanuman Cars home"
+        >
+
+            <span class="brand-main">
+                HANUMAN
+            </span>
+
+            <span class="brand-sub">
+                CARS
+            </span>
+
+        </a>
+
+
+        <!-- Mobile Menu -->
+
+        <button
+            class="menu-toggle"
+            id="menuToggle"
+            aria-label="Open menu"
+            aria-expanded="false"
+            type="button"
+        >
+            ☰
+        </button>
+
+
+        <!-- Navigation -->
+
+        <nav
+            class="nav"
+            id="siteNav"
+        >
+
+            <a href="#home">
+                Home
+            </a>
+
+            <a href="#cars">
+                Cars
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+            <a href="#contact">
+                Contact
+            </a>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+
+    <main>
+
+
+        <!-- ======================================
+             HERO SECTION
+             ====================================== -->
+
+        <section
+            class="hero"
+            id="home"
+        >
+
+            <div class="hero-overlay"></div>
+
+
+            <div class="hero-inner container">
+
+                <div class="hero-copy">
+
+
+                    <p class="eyebrow">
+                        USED CARS • GANGUR, VIJAYAWADA
+                    </p>
+
+
+                    <h1>
+
+                        Find a car that
+
+                        <br>
+
+                        <span>
+                            fits your journey.
+                        </span>
+
+                    </h1>
+
+
+                    <p class="hero-text">
+
+                        Explore quality used cars from multiple brands,
+                        with clear details and direct WhatsApp enquiries.
+
+                    </p>
+
+
+                    <div class="hero-actions">
+
+
+                        <a
+                            class="btn btn-primary"
+                            href="#cars"
+                        >
+                            View Available Cars
+                        </a>
+
+
+                        <a
+                            class="btn btn-ghost"
+                            href="#contact"
+                        >
+                            Contact Hanuman Cars
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ======================================
+             AVAILABLE CARS
+             ====================================== -->
+
+        <section
+            class="section container"
+            id="cars"
+        >
+
+
+            <div class="section-head">
+
+
+                <div>
+
+                    <p class="eyebrow">
+                        OUR CARS
+                    </p>
+
+
+                    <h2>
+                        Available Cars
+                    </h2>
+
+                </div>
+
+
+                <p class="section-note">
+                    Recently added cars appear first.
+                </p>
+
+            </div>
+
+
+            <!--
+                IMPORTANT:
+
+                JavaScript will load the cars
+                from the n8n /cars webhook.
+
+                n8n
+                  ↓
+                Google Sheets
+                  ↓
+                Customer Website
+                  ↓
+                This carList
+            -->
+
+            <div
+                id="carList"
+                class="car-grid"
+                aria-live="polite"
+            >
+
+                <!-- Loading state -->
+
+                <div class="car-loading">
+
+                    <p>
+                        Loading available cars...
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ======================================
+             ABOUT SECTION
+             ====================================== -->
+
+        <section
+            class="about-band"
+            id="about"
+        >
+
+            <div class="container about-grid">
+
+
+                <div>
+
+                    <p class="eyebrow">
+                        ABOUT HANUMAN CARS
+                    </p>
+
+
+                    <h2>
+                        Simple. Clear. Car-focused.
+                    </h2>
+
+                </div>
+
+
+                <p>
+
+                    Hanuman Cars helps customers explore quality used
+                    cars in and around Vijayawada. Browse the available
+                    vehicles, check their details and contact us directly
+                    on WhatsApp for enquiries.
+
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ======================================
+             CONTACT SECTION
+             ====================================== -->
+
+        <section
+            class="section container contact"
+            id="contact"
+        >
+
+            <div class="contact-card">
+
+
+                <div>
+
+
+                    <p class="eyebrow">
+                        GET IN TOUCH
+                    </p>
+
+
+                    <h2>
+                        Looking for a used car?
+                    </h2>
+
+
+                    <p>
+
+                        Talk to Hanuman Cars about the vehicles
+                        currently available.
+
+                    </p>
+
+
+                    <div class="contact-meta">
+
+
+                        <span>
+                            📍 Gangur, Vijayawada
+                        </span>
+
+
+                        <a href="tel:+919866447000">
+                            📞 9866447000
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!--
+                    JavaScript will automatically
+                    add the WhatsApp URL.
+                -->
+
+                <a
+                    class="btn btn-dark"
+                    id="mainWhatsapp"
+                    target="_blank"
+                    rel="noopener"
+                    href="#"
+                >
+                    WhatsApp Us
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+
+    <footer class="footer">
+
+        <div class="container footer-inner">
+
+
+            <div>
+
+                <strong>
+                    HANUMAN CARS
+                </strong>
+
+                <span>
+                    • Gangur, Vijayawada
+                </span>
+
+            </div>
+
+
+            <div>
+
+                ©
+
+                <span id="year"></span>
+
+                Hanuman Cars
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
+    <!--
+        IMPORTANT:
+
+        Do NOT put the JavaScript code directly
+        inside this HTML file.
+
+        Keep the complete JavaScript inside:
+
+        script.js
+
+        Both index.html and car.html
+        use the same script.js.
+    -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

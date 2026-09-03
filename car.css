@@ -1,0 +1,411 @@
+/* =========================================================
+   HANUMAN CARS
+   CAR DETAILS PAGE CSS — V1
+   ========================================================= */
+
+
+/* =========================================================
+   1. PAGE SECTION
+   ========================================================= */
+
+.car-details-section {
+    min-height: 70vh;
+    padding-top: 70px;
+    padding-bottom: 90px;
+}
+
+
+/* =========================================================
+   2. DETAILS LAYOUT
+   ========================================================= */
+
+.details-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 55px;
+    align-items: start;
+}
+
+
+/* =========================================================
+   3. PHOTO GALLERY
+   ========================================================= */
+
+.car-gallery {
+    width: 100%;
+}
+
+
+.gallery-main {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #f1f1f1;
+    border: 1px solid #e5e5e5;
+}
+
+
+.gallery-main img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   4. GALLERY THUMBNAILS
+   ========================================================= */
+
+.gallery-thumbs {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+
+.thumb {
+    flex: 0 0 82px;
+    width: 82px;
+    height: 62px;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f1f1f1;
+    cursor: pointer;
+}
+
+
+.thumb img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+
+.thumb:hover {
+    border-color: #999;
+}
+
+
+.thumb.active {
+    border-color: #111;
+}
+
+
+/* =========================================================
+   5. DETAILS INFORMATION
+   ========================================================= */
+
+.details-info {
+    padding-top: 5px;
+}
+
+
+.details-info .car-brand {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #777;
+}
+
+
+.details-info h1 {
+    margin: 0;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+
+
+.details-price {
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+
+.details-price strong {
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+
+/* =========================================================
+   6. SPECIFICATION TABLE
+   ========================================================= */
+
+.spec-table {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid #e5e5e5;
+}
+
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 16px 12px 16px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+
+.spec-item span {
+    font-size: 12px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+
+.spec-item strong {
+    font-size: 15px;
+    color: #111;
+}
+
+
+/* =========================================================
+   7. DESCRIPTION
+   ========================================================= */
+
+.details-description {
+    margin: 28px 0 0;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #555;
+}
+
+
+/* =========================================================
+   8. ACTION BUTTONS
+   ========================================================= */
+
+.details-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+
+.details-actions .btn {
+    text-decoration: none;
+}
+
+
+.share-btn {
+    min-height: 48px;
+    padding: 0 20px;
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+    background: #fff;
+    color: #111;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.share-btn:hover {
+    background: #f5f5f5;
+    border-color: #aaa;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   9. CAR NOT FOUND
+   ========================================================= */
+
+.not-found {
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 50px 30px;
+    text-align: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 18px;
+    background: #fff;
+}
+
+
+.not-found h2 {
+    margin: 0 0 12px;
+    font-size: 30px;
+}
+
+
+.not-found p {
+    margin: 0 0 25px;
+    color: #666;
+    line-height: 1.6;
+}
+
+
+.not-found a {
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   10. LOADING
+   ========================================================= */
+
+.car-loading {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+}
+
+
+.car-loading p {
+    margin: 0;
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   11. EMPTY GALLERY SUPPORT
+   ========================================================= */
+
+.gallery-main:has(img[src=""]) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.gallery-main:has(img[src=""])::after {
+    content: "No photo available";
+    color: #888;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   12. MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .car-details-section {
+        padding-top: 45px;
+        padding-bottom: 65px;
+    }
+
+
+    .details-layout {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+
+    .details-info {
+        padding-top: 0;
+    }
+
+}
+
+
+/* =========================================================
+   13. SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .car-details-section {
+        padding-top: 30px;
+        padding-bottom: 50px;
+    }
+
+
+    .gallery-main {
+        border-radius: 12px;
+        aspect-ratio: 4 / 3;
+    }
+
+
+    .gallery-thumbs {
+        gap: 8px;
+    }
+
+
+    .thumb {
+        flex-basis: 70px;
+        width: 70px;
+        height: 54px;
+    }
+
+
+    .details-info h1 {
+        font-size: 36px;
+    }
+
+
+    .details-price {
+        margin-top: 20px;
+        margin-bottom: 22px;
+    }
+
+
+    .details-price strong {
+        font-size: 24px;
+    }
+
+
+    .spec-table {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .spec-item {
+        padding: 13px 8px 13px 0;
+    }
+
+
+    .details-actions {
+        flex-direction: column;
+    }
+
+
+    .details-actions .btn,
+    .share-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+
+    .not-found {
+        margin: 50px auto;
+        padding: 35px 20px;
+    }
+
+}
+
+
+/* =========================================================
+   14. ACCESSIBILITY
+   ========================================================= */
+
+.thumb:focus-visible,
+.share-btn:focus-visible {
+    outline: 3px solid #111;
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   END
+   ========================================================= */

@@ -1,0 +1,1661 @@
+/* =========================================================
+   HANUMAN CARS
+   Complete Website CSS
+   ========================================================= */
+
+
+/* =========================================================
+   1. GLOBAL VARIABLES
+   ========================================================= */
+
+:root {
+
+    --text: #202124;
+    --muted: #5f6368;
+
+    --line: #e8eaed;
+
+    --soft: #f8f9fa;
+
+    --blue: #1a73e8;
+    --blue-dark: #1557b0;
+
+    --white: #ffffff;
+
+    --shadow:
+        0 12px 35px rgba(32, 33, 36, 0.09);
+
+    --radius: 18px;
+
+}
+
+
+/* =========================================================
+   2. RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color: var(--text);
+
+    background: var(--white);
+
+    line-height: 1.55;
+
+}
+
+
+img {
+    max-width: 100%;
+}
+
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+
+a {
+    color: inherit;
+}
+
+
+/* =========================================================
+   3. COMMON CONTAINER
+   ========================================================= */
+
+.container {
+
+    width: min(1180px, 92%);
+
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+
+/* =========================================================
+   4. HEADER
+   ========================================================= */
+
+.site-header {
+
+    width: min(1180px, 92%);
+
+    min-height: 76px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 24px;
+
+    position: relative;
+
+    z-index: 20;
+
+    background:
+        rgba(255, 255, 255, 0.94);
+
+}
+
+
+/* ---------- Logo ---------- */
+
+.brand {
+
+    text-decoration: none;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    letter-spacing: -0.6px;
+
+    white-space: nowrap;
+
+}
+
+
+.brand-main {
+
+    font-weight: 400;
+
+}
+
+
+.brand-sub {
+
+    font-weight: 800;
+
+}
+
+
+/* ---------- Navigation ---------- */
+
+.nav {
+
+    display: flex;
+
+    gap: 28px;
+
+}
+
+
+.nav a {
+
+    color: var(--muted);
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition:
+        color 0.2s ease;
+
+}
+
+
+.nav a:hover {
+
+    color: var(--blue);
+
+}
+
+
+/* ---------- Mobile Menu Button ---------- */
+
+.menu-toggle {
+
+    display: none;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    color: var(--text);
+
+}
+
+
+/* =========================================================
+   5. HERO SECTION
+   ========================================================= */
+
+.hero {
+
+    min-height: 610px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius:
+        0 0 26px 26px;
+
+    background:
+
+        url(
+            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1800&q=85"
+        )
+
+        center / cover no-repeat;
+
+}
+
+
+/* ---------- Hero Overlay ---------- */
+
+.hero-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.98) 0%,
+            rgba(255,255,255,0.91) 44%,
+            rgba(255,255,255,0.18) 100%
+        );
+
+}
+
+
+/* ---------- Hero Inner ---------- */
+
+.hero-inner {
+
+    min-height: 610px;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+/* ---------- Hero Text ---------- */
+
+.hero-copy {
+
+    max-width: 680px;
+
+    padding:
+        70px 0;
+
+}
+
+
+.eyebrow {
+
+    color: var(--blue);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.hero h1 {
+
+    font-size:
+        clamp(46px, 7vw, 78px);
+
+    line-height: 1.02;
+
+    letter-spacing: -4px;
+
+    margin-bottom: 24px;
+
+}
+
+
+.hero h1 span {
+
+    color: var(--blue);
+
+}
+
+
+.hero-text {
+
+    max-width: 570px;
+
+    color: var(--muted);
+
+    font-size: 18px;
+
+    margin-bottom: 30px;
+
+}
+
+
+/* ---------- Hero Buttons ---------- */
+
+.hero-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+}
+
+
+/* =========================================================
+   6. BUTTONS
+   ========================================================= */
+
+.btn {
+
+    display: inline-flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 46px;
+
+    padding:
+        0 19px;
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    border:
+        1px solid transparent;
+
+    cursor: pointer;
+
+    transition:
+
+        transform 0.2s ease,
+
+        box-shadow 0.2s ease,
+
+        background 0.2s ease;
+
+}
+
+
+.btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+
+        0 8px 24px
+        rgba(32, 33, 36, 0.12);
+
+}
+
+
+.btn-primary {
+
+    background:
+        var(--blue);
+
+    color:
+        var(--white);
+
+}
+
+
+.btn-primary:hover {
+
+    background:
+        var(--blue-dark);
+
+}
+
+
+.btn-ghost {
+
+    background:
+        rgba(255,255,255,0.8);
+
+    border-color:
+        var(--line);
+
+}
+
+
+.btn-dark {
+
+    background:
+        var(--text);
+
+    color:
+        var(--white);
+
+}
+
+
+/* =========================================================
+   7. GENERAL SECTIONS
+   ========================================================= */
+
+.section {
+
+    padding:
+        92px 0;
+
+}
+
+
+.section-head {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 30px;
+
+    margin-bottom: 38px;
+
+}
+
+
+.section-head h2,
+.about-grid h2,
+.contact-card h2 {
+
+    font-size:
+        clamp(34px, 5vw, 50px);
+
+    line-height: 1.08;
+
+    letter-spacing: -2px;
+
+}
+
+
+.section-note {
+
+    color:
+        var(--muted);
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   8. CAR GRID
+   ========================================================= */
+
+.car-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 24px;
+
+}
+
+
+/* =========================================================
+   9. CAR CARD
+   ========================================================= */
+
+.car-card {
+
+    overflow: hidden;
+
+    border:
+        1px solid var(--line);
+
+    border-radius:
+        var(--radius);
+
+    background:
+        var(--white);
+
+    box-shadow:
+        0 2px 8px
+        rgba(60,64,67,0.04);
+
+    transition:
+
+        transform 0.25s ease,
+
+        box-shadow 0.25s ease;
+
+}
+
+
+.car-card:hover {
+
+    transform:
+        translateY(-5px);
+
+    box-shadow:
+        var(--shadow);
+
+}
+
+
+/* =========================================================
+   10. CAR IMAGE
+   ========================================================= */
+
+.car-image {
+
+    position: relative;
+
+    aspect-ratio:
+        16 / 10;
+
+    background:
+        #f1f3f4;
+
+    overflow: hidden;
+
+}
+
+
+.car-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition:
+        transform 0.35s ease;
+
+}
+
+
+.car-card:hover
+.car-image img {
+
+    transform:
+        scale(1.03);
+
+}
+
+
+/* =========================================================
+   11. RECENTLY ADDED BADGE
+   ========================================================= */
+
+.badge {
+
+    position: absolute;
+
+    top: 13px;
+
+    left: 13px;
+
+    padding:
+        6px 9px;
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(255,255,255,0.94);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+}
+
+
+/* =========================================================
+   12. CAR INFORMATION
+   ========================================================= */
+
+.car-info {
+
+    padding:
+        20px;
+
+}
+
+
+.car-brand {
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+
+    margin-bottom:
+        2px;
+
+}
+
+
+.car-title {
+
+    font-size:
+        24px;
+
+    line-height:
+        1.15;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+/* =========================================================
+   13. CAR SPECIFICATIONS
+   ========================================================= */
+
+.car-specs {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-bottom:
+        19px;
+
+}
+
+
+.car-specs span {
+
+    padding:
+        5px 8px;
+
+    background:
+        var(--soft);
+
+    border-radius:
+        6px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+}
+
+
+/* =========================================================
+   14. CAR PRICE + VIEW BUTTON
+   ========================================================= */
+
+.car-bottom {
+
+    border-top:
+        1px solid var(--line);
+
+    padding-top:
+        15px;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap: 12px;
+
+}
+
+
+.price {
+
+    font-size:
+        16px;
+
+    font-weight:
+        800;
+
+}
+
+
+.view-btn {
+
+    color:
+        var(--blue);
+
+    text-decoration:
+        none;
+
+    font-size:
+        13px;
+
+    font-weight:
+        800;
+
+}
+
+
+.view-btn:hover {
+
+    text-decoration:
+        underline;
+
+}
+
+
+/* =========================================================
+   15. EMPTY CAR STATE
+   ========================================================= */
+
+.empty-state {
+
+    grid-column:
+        1 / -1;
+
+    padding:
+        70px 20px;
+
+    border:
+        1px dashed #dadce0;
+
+    border-radius:
+        var(--radius);
+
+    background:
+        var(--soft);
+
+    text-align:
+        center;
+
+}
+
+
+.empty-state p {
+
+    color:
+        var(--muted);
+
+    margin-top:
+        5px;
+
+}
+
+
+/* =========================================================
+   16. ABOUT SECTION
+   ========================================================= */
+
+.about-band {
+
+    background:
+        var(--soft);
+
+    padding:
+        90px 0;
+
+}
+
+
+.about-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        0.9fr 1.1fr;
+
+    gap:
+        80px;
+
+    align-items:
+        start;
+
+}
+
+
+.about-grid > p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        17px;
+
+    max-width:
+        650px;
+
+}
+
+
+/* =========================================================
+   17. CONTACT SECTION
+   ========================================================= */
+
+.contact {
+
+    padding-top:
+        40px;
+
+}
+
+
+.contact-card {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        40px;
+
+    padding:
+        45px;
+
+    border:
+        1px solid var(--line);
+
+    border-radius:
+        var(--radius);
+
+    background:
+        var(--white);
+
+    box-shadow:
+        var(--shadow);
+
+}
+
+
+.contact-card p:not(.eyebrow) {
+
+    color:
+        var(--muted);
+
+    margin-top:
+        12px;
+
+}
+
+
+.contact-meta {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap:
+        18px;
+
+    margin-top:
+        20px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        14px;
+
+}
+
+
+.contact-meta a {
+
+    text-decoration:
+        none;
+
+}
+
+
+.contact-meta a:hover {
+
+    color:
+        var(--blue);
+
+}
+
+
+/* =========================================================
+   18. CAR DETAILS PAGE
+   ========================================================= */
+
+.details-page {
+
+    padding:
+        55px 0 100px;
+
+    min-height:
+        70vh;
+
+}
+
+
+/* ---------- Back Link ---------- */
+
+.back-link {
+
+    display:
+        inline-block;
+
+    margin-bottom:
+        28px;
+
+    color:
+        var(--muted);
+
+    text-decoration:
+        none;
+
+    font-size:
+        14px;
+
+}
+
+
+.back-link:hover {
+
+    color:
+        var(--blue);
+
+}
+
+
+/* ---------- Details Layout ---------- */
+
+.details-layout {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1.15fr 0.85fr;
+
+    gap:
+        55px;
+
+    align-items:
+        start;
+
+}
+
+
+/* =========================================================
+   19. CAR IMAGE GALLERY
+   ========================================================= */
+
+.gallery-main {
+
+    border-radius:
+        var(--radius);
+
+    overflow:
+        hidden;
+
+    background:
+        var(--soft);
+
+    aspect-ratio:
+        16 / 10;
+
+}
+
+
+.gallery-main img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        block;
+
+    object-fit:
+        cover;
+
+}
+
+
+/* ---------- Gallery Thumbnails ---------- */
+
+.gallery-thumbs {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap:
+        8px;
+
+    margin-top:
+        10px;
+
+}
+
+
+.thumb {
+
+    border:
+        2px solid transparent;
+
+    padding:
+        0;
+
+    border-radius:
+        8px;
+
+    overflow:
+        hidden;
+
+    background:
+        var(--soft);
+
+    cursor:
+        pointer;
+
+    aspect-ratio:
+        1.4;
+
+}
+
+
+.thumb.active {
+
+    border-color:
+        var(--blue);
+
+}
+
+
+.thumb img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    display:
+        block;
+
+}
+
+
+/* =========================================================
+   20. DETAILS INFORMATION
+   ========================================================= */
+
+.details-info .car-brand {
+
+    font-size:
+        14px;
+
+}
+
+
+.details-info h1 {
+
+    font-size:
+        clamp(42px, 6vw, 65px);
+
+    line-height:
+        1;
+
+    letter-spacing:
+        -3px;
+
+    margin:
+        5px 0 22px;
+
+}
+
+
+.details-price {
+
+    font-size:
+        23px;
+
+    margin-bottom:
+        27px;
+
+}
+
+
+/* =========================================================
+   21. SPECIFICATION TABLE
+   ========================================================= */
+
+.spec-table {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    border-top:
+        1px solid var(--line);
+
+    border-left:
+        1px solid var(--line);
+
+    margin-bottom:
+        28px;
+
+}
+
+
+.spec-item {
+
+    padding:
+        13px 15px;
+
+    border-right:
+        1px solid var(--line);
+
+    border-bottom:
+        1px solid var(--line);
+
+}
+
+
+.spec-item span {
+
+    display:
+        block;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    margin-bottom:
+        2px;
+
+}
+
+
+.spec-item strong {
+
+    font-size:
+        14px;
+
+}
+
+
+/* =========================================================
+   22. DESCRIPTION
+   ========================================================= */
+
+.details-description {
+
+    color:
+        var(--muted);
+
+    margin-bottom:
+        25px;
+
+}
+
+
+/* =========================================================
+   23. DETAILS ACTIONS
+   ========================================================= */
+
+.details-actions {
+
+    display:
+        grid;
+
+    gap:
+        10px;
+
+}
+
+
+/* =========================================================
+   24. SHARE BUTTON
+   ========================================================= */
+
+.share-btn {
+
+    width:
+        100%;
+
+    min-height:
+        46px;
+
+    border:
+        1px solid var(--line);
+
+    border-radius:
+        10px;
+
+    background:
+        var(--white);
+
+    cursor:
+        pointer;
+
+    font-weight:
+        700;
+
+    transition:
+
+        background 0.2s ease,
+
+        transform 0.2s ease;
+
+}
+
+
+.share-btn:hover {
+
+    background:
+        var(--soft);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* =========================================================
+   25. NOT FOUND PAGE
+   ========================================================= */
+
+.not-found {
+
+    padding:
+        100px 20px;
+
+    text-align:
+        center;
+
+}
+
+
+.not-found p {
+
+    color:
+        var(--muted);
+
+    margin:
+        8px 0 20px;
+
+}
+
+
+/* =========================================================
+   26. FOOTER
+   ========================================================= */
+
+.footer {
+
+    border-top:
+        1px solid var(--line);
+
+    padding:
+        30px 0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+
+}
+
+
+.footer-inner {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+}
+
+
+.footer strong {
+
+    color:
+        var(--text);
+
+}
+
+
+/* =========================================================
+   27. TABLET RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+
+    /* Cars */
+
+    .car-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+
+    /* Details */
+
+    .details-layout {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    /* About */
+
+    .about-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            25px;
+
+    }
+
+
+    .details-info {
+
+        max-width:
+            700px;
+
+    }
+
+}
+
+
+/* =========================================================
+   28. MOBILE RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+
+    /* ---------- Header ---------- */
+
+    .site-header {
+
+        min-height:
+            68px;
+
+    }
+
+
+    .menu-toggle {
+
+        display:
+            block;
+
+    }
+
+
+    .nav {
+
+        display:
+            none;
+
+        position:
+            absolute;
+
+        top:
+            68px;
+
+        left:
+            0;
+
+        right:
+            0;
+
+        padding:
+            12px;
+
+        flex-direction:
+            column;
+
+        gap:
+            0;
+
+        background:
+            white;
+
+        border:
+            1px solid var(--line);
+
+        border-radius:
+            12px;
+
+        box-shadow:
+            var(--shadow);
+
+    }
+
+
+    .nav.open {
+
+        display:
+            flex;
+
+    }
+
+
+    .nav a {
+
+        padding:
+            12px;
+
+    }
+
+
+    /* ---------- Hero ---------- */
+
+    .hero,
+    .hero-inner {
+
+        min-height:
+            560px;
+
+    }
+
+
+    .hero-overlay {
+
+        background:
+            rgba(255,255,255,0.90);
+
+    }
+
+
+    .hero h1 {
+
+        letter-spacing:
+            -2.5px;
+
+    }
+
+
+    /* ---------- Sections ---------- */
+
+    .section {
+
+        padding:
+            70px 0;
+
+    }
+
+
+    .section-head {
+
+        display:
+            block;
+
+    }
+
+
+    .section-note {
+
+        margin-top:
+            10px;
+
+    }
+
+
+    /* ---------- Cars ---------- */
+
+    .car-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    /* ---------- Contact ---------- */
+
+    .contact-card {
+
+        display:
+            block;
+
+        padding:
+            30px;
+
+    }
+
+
+    .contact-card .btn {
+
+        margin-top:
+            25px;
+
+        width:
+            100%;
+
+    }
+
+
+    /* ---------- Footer ---------- */
+
+    .footer-inner {
+
+        flex-direction:
+            column;
+
+    }
+
+}
+
+
+/* =========================================================
+   29. SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+
+    /* Hero */
+
+    .hero-copy {
+
+        padding:
+            50px 0;
+
+    }
+
+
+    .hero h1 {
+
+        font-size:
+            45px;
+
+    }
+
+
+    .hero-text {
+
+        font-size:
+            16px;
+
+    }
+
+
+    .hero-actions .btn {
+
+        width:
+            100%;
+
+    }
+
+
+    /* Details */
+
+    .details-page {
+
+        padding-top:
+            40px;
+
+    }
+
+
+    .details-info h1 {
+
+        font-size:
+            42px;
+
+    }
+
+
+    .gallery-thumbs {
+
+        grid-template-columns:
+            repeat(5, 1fr);
+
+    }
+
+
+    .spec-table {
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
+
+}
