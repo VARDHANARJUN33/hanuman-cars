@@ -1,2146 +1,1892 @@
 /* =========================================================
    HANUMAN CARS
-   ADMIN DASHBOARD CSS
+   ADMIN DASHBOARD JAVASCRIPT
    ========================================================= */
+
+const N8N_WEBHOOK_URL =
+    "https://cricwith27.app.n8n.cloud/webhook/hanuman-cars";
+
+
+const ADMIN_KEYS = [
+    "HANUMAN",
+    "arjun",
+    "ARJUN",
+    "mallika",
+    "MALLESWARI",
+    "MALLIKA",
+    "malleswari",
+    "RAJESH",
+    "rajesh",
+    "abhiram",
+    "ABHIRAM"
+];
+
+
+const SESSION_KEY =
+    "hanumanAdminLoggedIn";
+
+
+const MAX_PHOTOS = 10;
 
 
 /* =========================================================
-   1. VARIABLES
+   STATE
    ========================================================= */
 
-:root {
+let cars = [];
 
-    --text: #202124;
-
-    --muted: #5f6368;
-
-    --line: #e8eaed;
-
-    --soft: #f8f9fa;
-
-    --blue: #1a73e8;
-
-    --blue-dark: #1557b0;
-
-    --red: #d93025;
-
-    --red-soft: #fce8e6;
-
-    --green: #188038;
-
-    --green-soft: #e6f4ea;
-
-    --white: #ffffff;
-
-    --shadow:
-        0 12px 35px rgba(32, 33, 36, 0.09);
-
-    --radius: 16px;
-
-}
+let temporaryPhotos = [];
 
 
 /* =========================================================
-   2. RESET
+   DOM
    ========================================================= */
 
-* {
+const loginSection =
+    document.getElementById("loginSection");
 
-    box-sizing: border-box;
+const dashboard =
+    document.getElementById("dashboard");
 
-    margin: 0;
+const loginForm =
+    document.getElementById("loginForm");
 
-    padding: 0;
+const adminKeyInput =
+    document.getElementById("adminKey");
 
-}
+const toggleKey =
+    document.getElementById("toggleKey");
 
+const loginError =
+    document.getElementById("loginError");
 
-html {
+const addCarButton =
+    document.getElementById("addCarButton");
 
-    scroll-behavior: smooth;
+const emptyAddButton =
+    document.getElementById("emptyAddButton");
 
-}
+const carSearch =
+    document.getElementById("carSearch");
 
+const carTableBody =
+    document.getElementById("carTableBody");
 
-body {
+const tableEmpty =
+    document.getElementById("tableEmpty");
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+const totalCars =
+    document.getElementById("totalCars");
 
-    color:
-        var(--text);
+const availableCars =
+    document.getElementById("availableCars");
 
-    background:
-        var(--soft);
+const carModal =
+    document.getElementById("carModal");
 
-    line-height:
-        1.5;
+const modalOverlay =
+    document.getElementById("modalOverlay");
 
-}
+const closeModal =
+    document.getElementById("closeModal");
 
+const cancelCar =
+    document.getElementById("cancelCar");
 
-button,
-input,
-select,
-textarea {
+const carForm =
+    document.getElementById("carForm");
 
-    font: inherit;
+const modalTitle =
+    document.getElementById("modalTitle");
 
-}
+const saveCarButton =
+    document.getElementById("saveCar");
 
+const formMessage =
+    document.getElementById("formMessage");
 
-button {
+const priceShow =
+    document.getElementById("priceShow");
 
-    cursor: pointer;
+const priceContact =
+    document.getElementById("priceContact");
 
-}
+const priceInputGroup =
+    document.getElementById("priceInputGroup");
 
+const carPhotos =
+    document.getElementById("carPhotos");
 
-img {
+const photoPreview =
+    document.getElementById("photoPreview");
 
-    max-width: 100%;
-
-}
+const photoCount =
+    document.getElementById("photoCount");
 
 
 /* =========================================================
-   3. COMMON
+   HELPERS
    ========================================================= */
 
-.container {
+function escapeHTML(value) {
 
-    width:
-        min(1200px, 92%);
-
-    margin:
-        0 auto;
-
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 
-[hidden] {
+function getValue(id) {
 
-    display:
-        none !important;
-
+    return (
+        document.getElementById(id)?.value.trim() || ""
+    );
 }
 
 
-/* =========================================================
-   4. HEADER
-   ========================================================= */
+function setField(id, value) {
 
-.admin-header {
+    const element =
+        document.getElementById(id);
 
-    min-height:
-        72px;
-
-    padding:
-        0 4%;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap:
-        20px;
-
-    background:
-        var(--white);
-
-    border-bottom:
-        1px solid var(--line);
-
-    position:
-        sticky;
-
-    top:
-        0;
-
-    z-index:
-        100;
-
+    if (element) {
+        element.value = value ?? "";
+    }
 }
 
 
-/* =========================================================
-   5. BRAND
-   ========================================================= */
+function showLoginError(message) {
 
-.admin-brand {
+    if (loginError) {
+        loginError.textContent = message;
+    }
 
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        9px;
-
-    font-size:
-        19px;
-
-    letter-spacing:
-        -0.5px;
-
+    adminKeyInput?.focus();
 }
 
 
-.brand-main {
+function showFormMessage(
+    message,
+    type = "success"
+) {
 
-    font-weight:
-        400;
+    if (!formMessage) {
+        return;
+    }
 
+    formMessage.textContent =
+        message;
+
+    formMessage.style.color =
+        type === "error"
+            ? "#d93025"
+            : "#188038";
 }
 
 
-.brand-sub {
+function clearFormMessage() {
 
-    font-weight:
-        800;
-
-}
-
-
-.admin-label {
-
-    padding:
-        4px 8px;
-
-    border-radius:
-        6px;
-
-    background:
-        var(--soft);
-
-    color:
-        var(--muted);
-
-    font-size:
-        10px;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        0.8px;
-
+    if (formMessage) {
+        formMessage.textContent = "";
+    }
 }
 
 
 /* =========================================================
-   6. VIEW WEBSITE
+   N8N
    ========================================================= */
 
-.view-site {
+async function sendToN8N(
+    action,
+    data = {}
+) {
 
-    color:
-        var(--blue);
-
-    text-decoration:
-        none;
-
-    font-size:
-        13px;
-
-    font-weight:
-        700;
-
-}
+    console.log("Sending to n8n:", {
+        action,
+        data
+    });
 
 
-.view-site:hover {
+    try {
 
-    text-decoration:
-        underline;
+        const response =
+            await fetch(
+                N8N_WEBHOOK_URL,
+                {
+                    method: "POST",
 
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        action,
+
+                        data,
+
+                        timestamp:
+                            new Date()
+                                .toISOString()
+
+                    })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `n8n HTTP ${response.status}`
+            );
+        }
+
+
+        const text =
+            await response.text();
+
+
+        let result = {};
+
+
+        if (text) {
+
+            try {
+
+                result =
+                    JSON.parse(text);
+
+            } catch {
+
+                result = {
+                    message: text
+                };
+
+            }
+
+        }
+
+
+        return {
+
+            success: true,
+
+            result
+
+        };
+
+
+    } catch (error) {
+
+        console.error(
+            "n8n request failed:",
+            error
+        );
+
+        return {
+
+            success: false,
+
+            error
+
+        };
+
+    }
 }
 
 
 /* =========================================================
-   7. EYEBROW
+   LOGIN
    ========================================================= */
 
-.eyebrow {
+function login() {
 
-    color:
-        var(--blue);
+    const enteredKey =
+        adminKeyInput?.value || "";
 
-    font-size:
-        11px;
 
-    font-weight:
-        800;
+    if (!enteredKey) {
 
-    letter-spacing:
-        1.4px;
+        showLoginError(
+            "Please enter the admin key."
+        );
 
-    margin-bottom:
-        8px;
+        return;
+    }
 
+
+    const authenticated =
+        ADMIN_KEYS.includes(
+            enteredKey
+        );
+
+
+    if (!authenticated) {
+
+        showLoginError(
+            "Incorrect admin key."
+        );
+
+        return;
+    }
+
+
+    sessionStorage.setItem(
+        SESSION_KEY,
+        "true"
+    );
+
+
+    if (loginError) {
+        loginError.textContent = "";
+    }
+
+
+    if (adminKeyInput) {
+        adminKeyInput.value = "";
+    }
+
+
+    showDashboard();
 }
 
 
 /* =========================================================
-   8. LOGIN SECTION
+   LOAD CARS
    ========================================================= */
 
-.login-section {
+async function loadCars() {
 
-    min-height:
-        calc(100vh - 72px);
+    const response =
+        await sendToN8N(
+            "get_cars"
+        );
 
-    display:
-        flex;
 
-    justify-content:
-        center;
+    if (!response.success) {
 
-    align-items:
-        center;
+        console.error(
+            "GET CARS FAILED:",
+            response.error
+        );
 
-    padding:
-        40px 20px;
+        renderCars();
+        updateStats();
 
-}
+        return false;
+    }
 
 
-/* =========================================================
-   9. LOGIN CARD
-   ========================================================= */
+    let result =
+        response.result;
 
-.login-card {
 
-    width:
-        min(440px, 100%);
+    if (
+        typeof result ===
+        "string"
+    ) {
 
-    padding:
-        42px;
+        try {
 
-    background:
-        var(--white);
+            result =
+                JSON.parse(result);
 
-    border:
-        1px solid var(--line);
+        } catch {
 
-    border-radius:
-        var(--radius);
+            renderCars();
+            updateStats();
 
-    box-shadow:
-        var(--shadow);
-
-}
-
-
-.lock-icon {
-
-    width:
-        54px;
-
-    height:
-        54px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        14px;
-
-    background:
-        var(--soft);
-
-    font-size:
-        25px;
-
-    margin-bottom:
-        25px;
-
-}
-
-
-.login-card h1 {
-
-    font-size:
-        34px;
-
-    letter-spacing:
-        -1.5px;
-
-    margin-bottom:
-        10px;
-
-}
-
-
-.login-description {
-
-    color:
-        var(--muted);
-
-    font-size:
-        14px;
-
-    margin-bottom:
-        28px;
-
-}
-
-
-.login-card form {
-
-    display:
-        grid;
-
-    gap:
-        9px;
-
-}
-
-
-.login-card label {
-
-    font-size:
-        13px;
-
-    font-weight:
-        700;
-
-}
-
-
-/* =========================================================
-   10. KEY INPUT
-   ========================================================= */
-
-.key-input {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    border:
-        1px solid #dadce0;
-
-    border-radius:
-        9px;
-
-    background:
-        var(--white);
-
-    overflow:
-        hidden;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-
-}
-
-
-.key-input:focus-within {
-
-    border-color:
-        var(--blue);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(26,115,232,0.10);
-
-}
-
-
-.key-input input {
-
-    width:
-        100%;
-
-    border:
-        none;
-
-    outline:
-        none;
-
-    padding:
-        13px;
-
-}
-
-
-.icon-button {
-
-    width:
-        46px;
-
-    height:
-        44px;
-
-    border:
-        none;
-
-    background:
-        transparent;
-
-}
-
-
-/* =========================================================
-   11. ERROR MESSAGE
-   ========================================================= */
-
-.error-message {
-
-    min-height:
-        20px;
-
-    color:
-        var(--red);
-
-    font-size:
-        12px;
-
-}
-
-
-/* =========================================================
-   12. SECURITY NOTE
-   ========================================================= */
-
-.security-note {
-
-    margin-top:
-        22px;
-
-    text-align:
-        center;
-
-    color:
-        var(--muted);
-
-    font-size:
-        11px;
-
-}
-
-
-/* =========================================================
-   13. BUTTONS
-   ========================================================= */
-
-.btn {
-
-    min-height:
-        44px;
-
-    padding:
-        0 17px;
-
-    border:
-        1px solid transparent;
-
-    border-radius:
-        9px;
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    gap:
-        8px;
-
-    font-size:
-        13px;
-
-    font-weight:
-        700;
-
-    text-decoration:
-        none;
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease;
-
-}
-
-
-.btn:hover {
-
-    transform:
-        translateY(-1px);
-
-}
-
-
-.btn-primary {
-
-    color:
-        var(--white);
-
-    background:
-        var(--blue);
-
-}
-
-
-.btn-primary:hover {
-
-    background:
-        var(--blue-dark);
-
-    box-shadow:
-        0 5px 18px
-        rgba(26,115,232,0.20);
-
-}
-
-
-.btn-secondary {
-
-    background:
-        var(--white);
-
-    color:
-        var(--text);
-
-    border-color:
-        var(--line);
-
-}
-
-
-.btn-danger-outline {
-
-    background:
-        var(--white);
-
-    color:
-        var(--red);
-
-    border-color:
-        #f1b7b2;
-
-}
-
-
-.btn-danger-outline:hover {
-
-    background:
-        var(--red-soft);
-
-}
-
-
-.btn-danger {
-
-    color:
-        var(--white);
-
-    background:
-        var(--red);
-
-}
-
-
-.login-button {
-
-    width:
-        100%;
-
-    margin-top:
-        7px;
-
-}
-
-
-/* =========================================================
-   14. DASHBOARD
-   ========================================================= */
-
-.dashboard {
-
-    padding:
-        45px 0 80px;
-
-}
-
-
-/* =========================================================
-   15. DASHBOARD TOP
-   ========================================================= */
-
-.dashboard-top {
-
-    display:
-        flex;
-
-    align-items:
-        flex-end;
-
-    justify-content:
-        space-between;
-
-    gap:
-        30px;
-
-    margin-bottom:
-        30px;
-
-}
-
-
-.dashboard-top h1 {
-
-    font-size:
-        clamp(34px, 5vw, 48px);
-
-    line-height:
-        1.05;
-
-    letter-spacing:
-        -2px;
-
-}
-
-
-.dashboard-description {
-
-    color:
-        var(--muted);
-
-    font-size:
-        14px;
-
-    margin-top:
-        7px;
-
-}
-
-
-.dashboard-actions {
-
-    display:
-        flex;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        9px;
-
-}
-
-
-/* =========================================================
-   16. STATS
-   ========================================================= */
-
-.stats-grid {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap:
-        15px;
-
-    margin-bottom:
-        25px;
-
-}
-
-
-.stat-card {
-
-    padding:
-        22px;
-
-    background:
-        var(--white);
-
-    border:
-        1px solid var(--line);
-
-    border-radius:
-        13px;
-
-}
-
-
-.stat-label {
-
-    display:
-        block;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-    margin-bottom:
-        5px;
-
-}
-
-
-.stat-value {
-
-    display:
-        block;
-
-    font-size:
-        29px;
-
-    letter-spacing:
-        -1px;
-
-}
-
-
-/* =========================================================
-   17. MANAGEMENT CARD
-   ========================================================= */
-
-.management-card {
-
-    background:
-        var(--white);
-
-    border:
-        1px solid var(--line);
-
-    border-radius:
-        var(--radius);
-
-    overflow:
-        hidden;
-
-}
-
-
-/* =========================================================
-   18. MANAGEMENT HEADER
-   ========================================================= */
-
-.management-header {
-
-    padding:
-        25px;
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
-    gap:
-        20px;
-
-    border-bottom:
-        1px solid var(--line);
-
-}
-
-
-.management-header h2 {
-
-    font-size:
-        20px;
-
-    letter-spacing:
-        -0.5px;
-
-}
-
-
-.management-header p {
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-    margin-top:
-        4px;
-
-}
-
-
-/* =========================================================
-   19. SEARCH
-   ========================================================= */
-
-.search-box input {
-
-    width:
-        240px;
-
-    height:
-        40px;
-
-    padding:
-        0 13px;
-
-    border:
-        1px solid #dadce0;
-
-    border-radius:
-        8px;
-
-    outline:
-        none;
-
-}
-
-
-.search-box input:focus {
-
-    border-color:
-        var(--blue);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(26,115,232,0.10);
-
-}
-
-
-/* =========================================================
-   20. TABLE
-   ========================================================= */
-
-.table-wrapper {
-
-    width:
-        100%;
-
-    overflow-x:
-        auto;
-
-}
-
-
-table {
-
-    width:
-        100%;
-
-    min-width:
-        900px;
-
-    border-collapse:
-        collapse;
-
-}
-
-
-thead {
-
-    background:
-        var(--soft);
-
-}
-
-
-th {
-
-    padding:
-        13px 15px;
-
-    text-align:
-        left;
-
-    color:
-        var(--muted);
-
-    font-size:
-        10px;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.6px;
-
-    font-weight:
-        800;
-
-}
-
-
-td {
-
-    padding:
-        15px;
-
-    border-top:
-        1px solid var(--line);
-
-    font-size:
-        13px;
-
-}
-
-
-.check-column {
-
-    width:
-        45px;
-
-}
-
-
-/* =========================================================
-   21. CAR TABLE ITEM
-   ========================================================= */
-
-.car-table-info {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        12px;
-
-}
-
-
-.car-table-image {
-
-    width:
-        64px;
-
-    height:
-        48px;
-
-    object-fit:
-        cover;
-
-    border-radius:
-        7px;
-
-    background:
-        var(--soft);
-
-}
-
-
-.car-table-name {
-
-    font-weight:
-        800;
-
-}
-
-
-.car-table-brand {
-
-    color:
-        var(--muted);
-
-    font-size:
-        11px;
-
-}
-
-
-/* =========================================================
-   22. STATUS
-   ========================================================= */
-
-.status {
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    padding:
-        5px 8px;
-
-    border-radius:
-        999px;
-
-    font-size:
-        10px;
-
-    font-weight:
-        800;
-
-}
-
-
-.status-available {
-
-    color:
-        var(--green);
-
-    background:
-        var(--green-soft);
-
-}
-
-
-/* =========================================================
-   23. TABLE ACTIONS
-   ========================================================= */
-
-.table-actions {
-
-    display:
-        flex;
-
-    gap:
-        7px;
-
-}
-
-
-.table-action {
-
-    min-width:
-        34px;
-
-    height:
-        34px;
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border:
-        1px solid var(--line);
-
-    border-radius:
-        7px;
-
-    background:
-        var(--white);
-
-}
-
-
-.table-action:hover {
-
-    background:
-        var(--soft);
-
-}
-
-
-.table-action.delete:hover {
-
-    color:
-        var(--red);
-
-    background:
-        var(--red-soft);
-
-}
-
-
-/* =========================================================
-   24. EMPTY TABLE
-   ========================================================= */
-
-.table-empty {
-
-    padding:
-        70px 20px;
-
-    text-align:
-        center;
-
-}
-
-
-.empty-icon {
-
-    font-size:
-        42px;
-
-    margin-bottom:
-        12px;
-
-}
-
-
-.table-empty h3 {
-
-    font-size:
-        20px;
-
-}
-
-
-.table-empty p {
-
-    color:
-        var(--muted);
-
-    font-size:
-        13px;
-
-    margin:
-        6px 0 18px;
-
-}
-
-
-/* =========================================================
-   25. MODAL
-   ========================================================= */
-
-.modal {
-
-    position:
-        fixed;
-
-    inset:
-        0;
-
-    z-index:
-        1000;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    padding:
-        20px;
-
-}
-
-
-.modal-overlay {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    background:
-        rgba(32,33,36,0.48);
-
-    backdrop-filter:
-        blur(3px);
-
-}
-
-
-/* =========================================================
-   26. MODAL CARD
-   ========================================================= */
-
-.modal-card {
-
-    position:
-        relative;
-
-    z-index:
-        2;
-
-    width:
-        min(850px, 100%);
-
-    max-height:
-        92vh;
-
-    overflow-y:
-        auto;
-
-    background:
-        var(--white);
-
-    border-radius:
-        18px;
-
-    box-shadow:
-        0 25px 70px
-        rgba(0,0,0,0.20);
-
-}
-
-
-/* =========================================================
-   27. MODAL HEADER
-   ========================================================= */
-
-.modal-header {
-
-    position:
-        sticky;
-
-    top:
-        0;
-
-    z-index:
-        5;
-
-    padding:
-        23px 27px;
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
-    background:
-        var(--white);
-
-    border-bottom:
-        1px solid var(--line);
-
-}
-
-
-.modal-header h2 {
-
-    font-size:
-        24px;
-
-    letter-spacing:
-        -1px;
-
-}
-
-
-.close-button {
-
-    width:
-        38px;
-
-    height:
-        38px;
-
-    border:
-        1px solid var(--line);
-
-    border-radius:
-        8px;
-
-    background:
-        var(--white);
-
-    font-size:
-        15px;
-
-}
-
-
-.close-button:hover {
-
-    background:
-        var(--soft);
-
-}
-
-
-/* =========================================================
-   28. FORM
-   ========================================================= */
-
-#carForm {
-
-    padding:
-        25px 27px 30px;
-
-}
-
-
-.form-section {
-
-    padding:
-        25px 0;
-
-    border-bottom:
-        1px solid var(--line);
-
-}
-
-
-.form-section:first-child {
-
-    padding-top:
-        0;
-
-}
-
-
-.form-section:last-of-type {
-
-    border-bottom:
-        none;
-
-}
-
-
-.form-section h3 {
-
-    font-size:
-        16px;
-
-    margin-bottom:
-        17px;
-
-}
-
-
-.form-section > p {
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-.form-grid {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap:
-        17px;
-
-}
-
-
-.form-group {
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    gap:
-        7px;
-
-}
-
-
-.form-group label {
-
-    font-size:
-        12px;
-
-    font-weight:
-        700;
-
-}
-
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-
-    width:
-        100%;
-
-    border:
-        1px solid #dadce0;
-
-    border-radius:
-        8px;
-
-    padding:
-        11px 12px;
-
-    outline:
-        none;
-
-    background:
-        var(--white);
-
-    color:
-        var(--text);
-
-}
-
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-
-    border-color:
-        var(--blue);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(26,115,232,0.09);
-
-}
-
-
-.form-group textarea {
-
-    resize:
-        vertical;
-
-}
-
-
-/* =========================================================
-   29. PRICE OPTIONS
-   ========================================================= */
-
-.price-option {
-
-    display:
-        flex;
-
-    flex-wrap:
-        wrap;
-
-    gap:
-        20px;
-
-    margin-bottom:
-        17px;
-
-}
-
-
-.radio-option {
-
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    gap:
-        7px;
-
-    font-size:
-        13px;
-
-    cursor:
-        pointer;
-
-}
-
-
-.radio-option input {
-
-    accent-color:
-        var(--blue);
-
-}
-
-
-/* =========================================================
-   30. SECTION TITLE ROW
-   ========================================================= */
-
-.section-title-row {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
-    gap:
-        15px;
-
-    margin-bottom:
-        17px;
-
-}
-
-
-.section-title-row h3 {
-
-    margin-bottom:
-        2px;
-
-}
-
-
-.section-title-row p {
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-.photo-count {
-
-    padding:
-        5px 9px;
-
-    border-radius:
-        999px;
-
-    background:
-        var(--soft);
-
-    color:
-        var(--muted);
-
-    font-size:
-        11px;
-
-    font-weight:
-        800;
-
-}
-
-
-/* =========================================================
-   31. PHOTO UPLOAD
-   ========================================================= */
-
-.photo-upload {
-
-    border:
-        1.5px dashed #c7c9cc;
-
-    border-radius:
-        12px;
-
-    background:
-        var(--soft);
-
-    transition:
-        border-color 0.2s ease,
-        background 0.2s ease;
-
-}
-
-
-.photo-upload:hover {
-
-    border-color:
-        var(--blue);
-
-    background:
-        #f3f7ff;
-
-}
-
-
-.upload-label {
-
-    min-height:
-        150px;
-
-    display:
-        flex;
-
-    flex-direction:
-        column;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    text-align:
-        center;
-
-    cursor:
-        pointer;
-
-}
-
-
-.upload-icon {
-
-    font-size:
-        30px;
-
-    margin-bottom:
-        7px;
-
-}
-
-
-.upload-label strong {
-
-    font-size:
-        14px;
-
-}
-
-
-.upload-label small {
-
-    color:
-        var(--muted);
-
-    font-size:
-        11px;
-
-    margin-top:
-        4px;
-
-}
-
-
-/* =========================================================
-   32. PHOTO PREVIEW
-   ========================================================= */
-
-.photo-preview {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(5, 1fr);
-
-    gap:
-        9px;
-
-    margin-top:
-        12px;
-
-}
-
-
-.preview-item {
-
-    position:
-        relative;
-
-    aspect-ratio:
-        1.2;
-
-    overflow:
-        hidden;
-
-    border-radius:
-        8px;
-
-    background:
-        var(--soft);
-
-}
-
-
-.preview-item img {
-
-    width:
-        100%;
-
-    height:
-        100%;
-
-    object-fit:
-        cover;
-
-    display:
-        block;
-
-}
-
-
-.remove-photo {
-
-    position:
-        absolute;
-
-    top:
-        5px;
-
-    right:
-        5px;
-
-    width:
-        25px;
-
-    height:
-        25px;
-
-    border:
-        none;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(255,255,255,0.95);
-
-    color:
-        var(--red);
-
-    font-weight:
-        800;
-
-}
-
-
-/* =========================================================
-   33. FORM MESSAGE
-   ========================================================= */
-
-.form-message {
-
-    min-height:
-        20px;
-
-    color:
-        var(--green);
-
-    font-size:
-        12px;
-
-}
-
-
-/* =========================================================
-   34. MODAL ACTIONS
-   ========================================================= */
-
-.modal-actions {
-
-    position:
-        sticky;
-
-    bottom:
-        0;
-
-    padding:
-        18px 0 0;
-
-    display:
-        flex;
-
-    justify-content:
-        flex-end;
-
-    gap:
-        9px;
-
-    background:
-        var(--white);
-
-}
-
-
-/* =========================================================
-   35. SCROLLBAR
-   ========================================================= */
-
-.modal-card::-webkit-scrollbar {
-
-    width:
-        8px;
-
-}
-
-
-.modal-card::-webkit-scrollbar-thumb {
-
-    background:
-        #dadce0;
-
-    border-radius:
-        10px;
-
-}
-
-
-/* =========================================================
-   36. TABLET
-   ========================================================= */
-
-@media (max-width: 850px) {
-
-
-    .dashboard-top {
-
-        align-items:
-            flex-start;
-
-        flex-direction:
-            column;
+            return false;
+        }
 
     }
 
 
-    .stats-grid {
+    let loadedCars = [];
 
-        grid-template-columns:
-            repeat(3, 1fr);
+
+    if (Array.isArray(result)) {
+
+        loadedCars =
+            result;
+
+    }
+
+    else if (
+        result &&
+        Array.isArray(result.cars)
+    ) {
+
+        loadedCars =
+            result.cars;
+
+    }
+
+    else if (
+        result &&
+        Array.isArray(result.data)
+    ) {
+
+        loadedCars =
+            result.data;
+
+    }
+
+    else if (
+        result &&
+        Array.isArray(result.items)
+    ) {
+
+        loadedCars =
+            result.items;
+
+    }
+
+    else if (
+        result &&
+        result.body
+    ) {
+
+        let body =
+            result.body;
+
+
+        if (
+            typeof body ===
+            "string"
+        ) {
+
+            try {
+
+                body =
+                    JSON.parse(body);
+
+            } catch {
+
+                body = null;
+
+            }
+
+        }
+
+
+        if (Array.isArray(body)) {
+
+            loadedCars =
+                body;
+
+        }
+
+        else if (
+            body &&
+            Array.isArray(body.cars)
+        ) {
+
+            loadedCars =
+                body.cars;
+
+        }
+
+        else if (
+            body &&
+            Array.isArray(body.data)
+        ) {
+
+            loadedCars =
+                body.data;
+
+        }
 
     }
 
 
-    .photo-preview {
+    if (!Array.isArray(loadedCars)) {
 
-        grid-template-columns:
-            repeat(4, 1fr);
+        console.error(
+            "Invalid cars response:",
+            result
+        );
+
+        renderCars();
+        updateStats();
+
+        return false;
+    }
+
+
+    cars =
+        loadedCars.map(
+            car => {
+
+                let photos =
+                    car.photos;
+
+
+                if (
+                    typeof photos ===
+                    "string"
+                ) {
+
+                    try {
+
+                        photos =
+                            JSON.parse(
+                                photos
+                            );
+
+                    } catch {
+
+                        photos =
+                            photos
+                                ? [photos]
+                                : [];
+
+                    }
+
+                }
+
+
+                if (
+                    !Array.isArray(photos)
+                ) {
+
+                    photos = [];
+
+                }
+
+
+                return {
+
+                    ...car,
+
+                    id: String(
+                        car.id ??
+                        car.ID ??
+                        car.Id ??
+                        ""
+                    ),
+
+                    brand:
+                        car.brand ??
+                        car.Brand ??
+                        "",
+
+                    model:
+                        car.model ??
+                        car.Model ??
+                        "",
+
+                    variant:
+                        car.variant ??
+                        car.Variant ??
+                        "",
+
+                    year:
+                        car.year ??
+                        car.Year ??
+                        "",
+
+                    fuel:
+                        car.fuel ??
+                        car.Fuel ??
+                        "",
+
+                    transmission:
+                        car.transmission ??
+                        car.Transmission ??
+                        "",
+
+                    km:
+                        car.km ??
+                        car.KM ??
+                        car.Km ??
+                        "",
+
+                    owners:
+                        car.owners ??
+                        car.Owners ??
+                        "",
+
+                    registration:
+                        car.registration ??
+                        car.Registration ??
+                        "",
+
+                    insurance:
+                        car.insurance ??
+                        car.Insurance ??
+                        "",
+
+                    location:
+                        car.location ??
+                        car.Location ??
+                        "Vijayawada",
+
+                    price:
+                        car.price ??
+                        car.Price ??
+                        "",
+
+                    description:
+                        car.description ??
+                        car.Description ??
+                        "",
+
+                    photos,
+
+                    status:
+                        car.status ??
+                        car.Status ??
+                        "Available",
+
+                    showPrice:
+                        car.showPrice !== false &&
+                        car.showPrice !== "false",
+
+                    addedAt:
+                        car.addedAt ??
+                        car.added_at ??
+                        car.AddedAt ??
+                        new Date()
+                            .toISOString()
+
+                };
+
+            }
+        );
+
+
+    renderCars();
+
+    updateStats();
+
+    return true;
+}
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+async function showDashboard() {
+
+    if (loginSection) {
+        loginSection.hidden = true;
+    }
+
+
+    if (dashboard) {
+        dashboard.hidden = false;
+    }
+
+
+    await loadCars();
+}
+
+
+function checkLogin() {
+
+    if (
+        sessionStorage.getItem(
+            SESSION_KEY
+        ) === "true"
+    ) {
+
+        showDashboard();
 
     }
 
 }
 
 
-/* =========================================================
-   37. MOBILE
-   ========================================================= */
+function logout() {
 
-@media (max-width: 650px) {
+    sessionStorage.removeItem(
+        SESSION_KEY
+    );
 
 
-    .admin-header {
-
-        padding:
-            0 20px;
-
+    if (dashboard) {
+        dashboard.hidden = true;
     }
 
 
-    .admin-label {
-
-        display:
-            none;
-
+    if (loginSection) {
+        loginSection.hidden = false;
     }
 
 
-    .dashboard {
-
-        padding:
-            30px 0 60px;
-
-    }
-
-
-    .dashboard-actions {
-
-        width:
-            100%;
-
-    }
-
-
-    .dashboard-actions .btn {
-
-        flex:
-            1;
-
-    }
-
-
-    .stats-grid {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .management-header {
-
-        align-items:
-            stretch;
-
-        flex-direction:
-            column;
-
-    }
-
-
-    .search-box input {
-
-        width:
-            100%;
-
-    }
-
-
-    .form-grid {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .modal {
-
-        padding:
-            0;
-
-        align-items:
-            stretch;
-
-    }
-
-
-    .modal-card {
-
-        width:
-            100%;
-
-        max-height:
-            100vh;
-
-        border-radius:
-            0;
-
-    }
-
-
-    .modal-header {
-
-        padding:
-            18px 20px;
-
-    }
-
-
-    #carForm {
-
-        padding:
-            20px;
-
-    }
-
-
-    .photo-preview {
-
-        grid-template-columns:
-            repeat(3, 1fr);
-
-    }
-
-
-    .login-card {
-
-        padding:
-            30px 22px;
-
+    if (adminKeyInput) {
+        adminKeyInput.value = "";
     }
 
 }
 
 
 /* =========================================================
-   38. SMALL MOBILE
+   SORT
    ========================================================= */
 
-@media (max-width: 420px) {
+function getSortedCars() {
+
+    return [...cars].sort(
+        (a, b) =>
+            new Date(
+                b.addedAt || 0
+            ) -
+            new Date(
+                a.addedAt || 0
+            )
+    );
+}
 
 
-    .admin-brand {
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
-        font-size:
-            17px;
+function getFilteredCars() {
+
+    const query =
+        carSearch?.value
+            .trim()
+            .toLowerCase() || "";
+
+
+    const sorted =
+        getSortedCars();
+
+
+    if (!query) {
+        return sorted;
+    }
+
+
+    return sorted.filter(
+        car => {
+
+            const searchableText = [
+
+                car.brand,
+                car.model,
+                car.variant,
+                car.year,
+                car.fuel,
+                car.transmission,
+                car.km,
+                car.location,
+                car.registration
+
+            ]
+                .join(" ")
+                .toLowerCase();
+
+
+            return searchableText.includes(
+                query
+            );
+
+        }
+    );
+}
+
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+
+function renderCars() {
+
+    if (
+        !carTableBody ||
+        !tableEmpty
+    ) {
+
+        return;
+    }
+
+
+    const filteredCars =
+        getFilteredCars();
+
+
+    if (
+        filteredCars.length === 0
+    ) {
+
+        carTableBody.innerHTML = "";
+
+        tableEmpty.hidden = false;
+
+        return;
+    }
+
+
+    tableEmpty.hidden = true;
+
+
+    carTableBody.innerHTML =
+        filteredCars
+            .map(createCarRow)
+            .join("");
+
+
+    attachRowEvents();
+}
+
+
+/* =========================================================
+   CREATE ROW
+   ========================================================= */
+
+function createCarRow(car) {
+
+    const image =
+        Array.isArray(car.photos) &&
+        car.photos.length
+            ? car.photos[0]
+            : "";
+
+
+    return `
+
+        <tr data-car-id="${escapeHTML(car.id)}">
+
+            <td>
+
+                <div class="car-table-info">
+
+                    ${
+                        image
+                            ? `
+                                <img
+                                    class="car-table-image"
+                                    src="${escapeHTML(image)}"
+                                    alt=""
+                                >
+                              `
+                            : `
+                                <div
+                                    class="car-table-image"
+                                ></div>
+                              `
+                    }
+
+                    <div>
+
+                        <div class="car-table-name">
+
+                            ${escapeHTML(
+                                car.brand
+                            )}
+
+                            ${escapeHTML(
+                                car.model
+                            )}
+
+                        </div>
+
+                        <div class="car-table-brand">
+
+                            ${escapeHTML(
+                                car.variant || ""
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+                ${escapeHTML(
+                    String(
+                        car.year || "-"
+                    )
+                )}
+            </td>
+
+
+            <td>
+                ${escapeHTML(
+                    car.fuel || "-"
+                )}
+            </td>
+
+
+            <td>
+                ${escapeHTML(
+                    car.km || "-"
+                )}
+            </td>
+
+
+            <td>
+
+                ${
+                    car.showPrice
+                        ? escapeHTML(
+                            car.price || "-"
+                        )
+                        : "Contact"
+                }
+
+            </td>
+
+
+            <td>
+
+                <span class="status status-available">
+
+                    ${escapeHTML(
+                        car.status ||
+                        "Available"
+                    )}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                <div class="table-actions">
+
+                    <button
+                        type="button"
+                        class="table-action delete delete-car"
+                        data-id="${escapeHTML(car.id)}"
+                        title="Delete car"
+                    >
+                        🗑️
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    `;
+}
+
+
+/* =========================================================
+   ROW EVENTS
+   ========================================================= */
+
+function attachRowEvents() {
+
+    document
+        .querySelectorAll(
+            ".delete-car"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        deleteCar(
+                            this.dataset.id
+                        );
+
+                    }
+                );
+
+            }
+        );
+}
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+function updateStats() {
+
+    if (totalCars) {
+
+        totalCars.textContent =
+            cars.length;
 
     }
 
 
-    .view-site {
+    if (availableCars) {
 
-        font-size:
-            11px;
+        availableCars.textContent =
+            cars.filter(
+                car =>
+                    String(
+                        car.status || ""
+                    ).toLowerCase() !==
+                    "sold"
+            ).length;
+
+    }
+}
+
+
+/* =========================================================
+   ADD CAR MODAL
+   ========================================================= */
+
+function openAddCarModal() {
+
+    temporaryPhotos = [];
+
+
+    if (modalTitle) {
+
+        modalTitle.textContent =
+            "Add New Car";
 
     }
 
 
-    .dashboard-actions {
+    if (saveCarButton) {
 
-        flex-direction:
-            column;
+        saveCarButton.textContent =
+            "Save Car";
 
-    }
-
-
-    .dashboard-actions .btn {
-
-        width:
-            100%;
+        saveCarButton.disabled =
+            false;
 
     }
 
 
-    .photo-preview {
+    carForm?.reset();
 
-        grid-template-columns:
-            repeat(2, 1fr);
+
+    setField(
+        "carLocation",
+        "Vijayawada"
+    );
+
+
+    if (priceShow) {
+        priceShow.checked = true;
+    }
+
+
+    if (priceContact) {
+        priceContact.checked = false;
+    }
+
+
+    updatePriceField();
+
+    renderPhotoPreview();
+
+    clearFormMessage();
+
+
+    if (carModal) {
+        carModal.hidden = false;
+    }
+
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    document
+        .getElementById(
+            "carBrand"
+        )
+        ?.focus();
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+   ========================================================= */
+
+function closeCarModal() {
+
+    if (carModal) {
+        carModal.hidden = true;
+    }
+
+
+    document.body.style.overflow =
+        "";
+
+
+    temporaryPhotos = [];
+
+
+    if (carPhotos) {
+        carPhotos.value = "";
+    }
+}
+
+
+/* =========================================================
+   SAVE CAR
+   ========================================================= */
+
+async function handleCarSubmit(
+    event
+) {
+
+    event.preventDefault();
+
+    clearFormMessage();
+
+
+    const brand =
+        getValue("carBrand");
+
+    const model =
+        getValue("carModel");
+
+    const variant =
+        getValue("carVariant");
+
+    const year =
+        getValue("carYear");
+
+    const fuel =
+        getValue("carFuel");
+
+    const transmission =
+        getValue("carTransmission");
+
+    const km =
+        getValue("carKm");
+
+    const owners =
+        getValue("carOwners");
+
+    const registration =
+        getValue("carRegistration");
+
+    const insurance =
+        document.getElementById(
+            "carInsurance"
+        )?.value || "";
+
+    const location =
+        getValue("carLocation");
+
+    const price =
+        getValue("carPrice");
+
+    const description =
+        getValue(
+            "carDescription"
+        );
+
+    const showPrice =
+        priceShow?.checked ?? true;
+
+
+    if (
+        !brand ||
+        !model ||
+        !year
+    ) {
+
+        showFormMessage(
+            "Please fill all required fields.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (
+        showPrice &&
+        !price
+    ) {
+
+        showFormMessage(
+            "Enter a price or select Contact for Price.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const car = {
+
+        id:
+            createCarId(
+                brand,
+                model
+            ),
+
+        brand,
+
+        model,
+
+        variant,
+
+        year:
+            Number(year),
+
+        fuel,
+
+        transmission,
+
+        km,
+
+        owners,
+
+        registration,
+
+        insurance,
+
+        location,
+
+        price,
+
+        showPrice,
+
+        description,
+
+        photos:
+            [
+                ...temporaryPhotos
+            ],
+
+        status:
+            "Available",
+
+        addedAt:
+            new Date()
+                .toISOString()
+
+    };
+
+
+    if (saveCarButton) {
+
+        saveCarButton.disabled =
+            true;
+
+        saveCarButton.textContent =
+            "Saving...";
 
     }
 
 
-    .modal-actions {
+    const response =
+        await sendToN8N(
+            "add_car",
+            {
+                car
+            }
+        );
 
-        flex-direction:
-            column-reverse;
+
+    if (saveCarButton) {
+
+        saveCarButton.disabled =
+            false;
+
+        saveCarButton.textContent =
+            "Save Car";
 
     }
 
 
-    .modal-actions .btn {
+    if (!response.success) {
 
-        width:
-            100%;
+        showFormMessage(
+            "Could not save to server. Check n8n and browser console.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    cars.push(car);
+
+
+    renderCars();
+
+    updateStats();
+
+
+    showFormMessage(
+        "Car added successfully.",
+        "success"
+    );
+
+
+    setTimeout(
+        closeCarModal,
+        700
+    );
+}
+
+
+/* =========================================================
+   CREATE CAR ID
+   ========================================================= */
+
+function createCarId(
+    brand,
+    model
+) {
+
+    const base =
+        `${brand}-${model}`
+            .toLowerCase()
+            .replace(
+                /[^a-z0-9]+/g,
+                "-"
+            )
+            .replace(
+                /^-|-$/g,
+                ""
+            );
+
+
+    let id =
+        base || "car";
+
+    let counter =
+        1;
+
+
+    while (
+        cars.some(
+            car =>
+                String(car.id) ===
+                String(id)
+        )
+    ) {
+
+        id =
+            `${base}-${counter}`;
+
+        counter++;
 
     }
+
+
+    return id;
+}
+
+
+/* =========================================================
+   DELETE SINGLE CAR
+   ========================================================= */
+
+async function deleteCar(id) {
+
+    const car =
+        cars.find(
+            item =>
+                String(item.id) ===
+                String(id)
+        );
+
+
+    if (!car) {
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            `Delete ${car.brand} ${car.model}?\n\nThis action cannot be undone.`
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const response =
+        await sendToN8N(
+            "delete_car",
+            {
+                carId: car.id
+            }
+        );
+
+
+    if (!response.success) {
+
+        alert(
+            "Could not delete the car from the server."
+        );
+
+        return;
+    }
+
+
+    cars =
+        cars.filter(
+            item =>
+                String(item.id) !==
+                String(id)
+        );
+
+
+    renderCars();
+
+    updateStats();
+}
+
+
+/* =========================================================
+   PRICE
+   ========================================================= */
+
+function updatePriceField() {
+
+    if (!priceInputGroup) {
+        return;
+    }
+
+
+    priceInputGroup.hidden =
+        priceContact?.checked ??
+        false;
+}
+
+
+/* =========================================================
+   PHOTO UPLOAD
+   ========================================================= */
+
+function handlePhotoUpload(
+    event
+) {
+
+    const files =
+        Array.from(
+            event.target.files || []
+        );
+
+
+    if (!files.length) {
+        return;
+    }
+
+
+    const remainingSlots =
+        MAX_PHOTOS -
+        temporaryPhotos.length;
+
+
+    if (
+        remainingSlots <= 0
+    ) {
+
+        alert(
+            `Maximum ${MAX_PHOTOS} photos allowed.`
+        );
+
+        carPhotos.value = "";
+
+        return;
+    }
+
+
+    const filesToAdd =
+        files.slice(
+            0,
+            remainingSlots
+        );
+
+
+    filesToAdd.forEach(
+        file => {
+
+            if (
+                !file.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                () => {
+
+                    temporaryPhotos.push(
+                        reader.result
+                    );
+
+                    renderPhotoPreview();
+
+                };
+
+
+            reader.onerror =
+                () => {
+
+                    console.error(
+                        "Could not read image:",
+                        file.name
+                    );
+
+                };
+
+
+            reader.readAsDataURL(
+                file
+            );
+
+        }
+    );
+
+
+    if (
+        files.length >
+        remainingSlots
+    ) {
+
+        alert(
+            `Only ${MAX_PHOTOS} photos can be added.`
+        );
+
+    }
+
+
+    carPhotos.value = "";
+}
+
+
+/* =========================================================
+   PHOTO PREVIEW
+   ========================================================= */
+
+function renderPhotoPreview() {
+
+    if (photoCount) {
+
+        photoCount.textContent =
+            `${temporaryPhotos.length} / ${MAX_PHOTOS}`;
+
+    }
+
+
+    if (!photoPreview) {
+        return;
+    }
+
+
+    if (
+        temporaryPhotos.length ===
+        0
+    ) {
+
+        photoPreview.innerHTML =
+            "";
+
+        return;
+    }
+
+
+    photoPreview.innerHTML =
+
+        temporaryPhotos
+            .map(
+                (
+                    photo,
+                    index
+                ) => `
+
+                    <div class="preview-item">
+
+                        <img
+                            src="${escapeHTML(photo)}"
+                            alt="Car photo ${index + 1}"
+                        >
+
+                        <button
+                            type="button"
+                            class="remove-photo"
+                            data-photo-index="${index}"
+                            aria-label="Remove photo"
+                        >
+                            ✕
+                        </button>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+
+    photoPreview
+        .querySelectorAll(
+            ".remove-photo"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        const index =
+                            Number(
+                                button.dataset
+                                    .photoIndex
+                            );
+
+
+                        temporaryPhotos.splice(
+                            index,
+                            1
+                        );
+
+
+                        renderPhotoPreview();
+
+                    }
+                );
+
+            }
+        );
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+function createLogoutButton() {
+
+    const header =
+        document.querySelector(
+            ".admin-header"
+        );
+
+
+    if (!header) {
+        return;
+    }
+
+
+    if (
+        document.getElementById(
+            "logoutButton"
+        )
+    ) {
+
+        return;
+    }
+
+
+    const button =
+        document.createElement(
+            "button"
+        );
+
+
+    button.id =
+        "logoutButton";
+
+    button.className =
+        "btn btn-secondary";
+
+    button.textContent =
+        "Logout";
+
+    button.type =
+        "button";
+
+
+    button.addEventListener(
+        "click",
+        logout
+    );
+
+
+    header.appendChild(
+        button
+    );
+}
+
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
+
+function setupEventListeners() {
+
+    loginForm?.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+            login();
+
+        }
+    );
+
+
+    toggleKey?.addEventListener(
+        "click",
+        () => {
+
+            if (!adminKeyInput) {
+                return;
+            }
+
+
+            if (
+                adminKeyInput.type ===
+                "password"
+            ) {
+
+                adminKeyInput.type =
+                    "text";
+
+                toggleKey.textContent =
+                    "🙈";
+
+            } else {
+
+                adminKeyInput.type =
+                    "password";
+
+                toggleKey.textContent =
+                    "👁";
+
+            }
+
+        }
+    );
+
+
+    addCarButton?.addEventListener(
+        "click",
+        openAddCarModal
+    );
+
+
+    emptyAddButton?.addEventListener(
+        "click",
+        openAddCarModal
+    );
+
+
+    carSearch?.addEventListener(
+        "input",
+        renderCars
+    );
+
+
+    closeModal?.addEventListener(
+        "click",
+        closeCarModal
+    );
+
+
+    cancelCar?.addEventListener(
+        "click",
+        closeCarModal
+    );
+
+
+    modalOverlay?.addEventListener(
+        "click",
+        closeCarModal
+    );
+
+
+    carForm?.addEventListener(
+        "submit",
+        handleCarSubmit
+    );
+
+
+    priceShow?.addEventListener(
+        "change",
+        updatePriceField
+    );
+
+
+    priceContact?.addEventListener(
+        "change",
+        updatePriceField
+    );
+
+
+    carPhotos?.addEventListener(
+        "change",
+        handlePhotoUpload
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape" &&
+                carModal &&
+                !carModal.hidden
+            ) {
+
+                closeCarModal();
+
+            }
+
+        }
+    );
+}
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+function initializeAdmin() {
+
+    setupEventListeners();
+
+    updatePriceField();
+
+    createLogoutButton();
+
+    checkLogin();
+}
+
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeAdmin
+    );
+
+} else {
+
+    initializeAdmin();
 
 }
