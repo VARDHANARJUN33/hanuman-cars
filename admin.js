@@ -18,11 +18,12 @@
 
 
 /* =========================================================
-   CONFIGURATION
+   1. CONFIGURATION
    ========================================================= */
 
 const N8N_WEBHOOK_URL =
-    "https://cricwith27.app.n8n.cloud/webhook-test/hanuman-cars";
+    "https://cricwith27.app.n8n.cloud/webhook/hanuman-cars";
+
 
 const ADMIN_KEYS = [
     "HANUMAN",
@@ -38,107 +39,137 @@ const ADMIN_KEYS = [
     "ABHIRAM"
 ];
 
-const SESSION_KEY = "hanumanAdminLoggedIn";
+
+const SESSION_KEY =
+    "hanumanAdminLoggedIn";
+
 
 const MAX_PHOTOS = 10;
 
 
 /* =========================================================
-   STATE
+   2. STATE
    ========================================================= */
 
 let cars = [];
+
 let temporaryPhotos = [];
 
 
 /* =========================================================
-   DOM ELEMENTS
+   3. DOM ELEMENTS
    ========================================================= */
 
 const loginSection =
     document.getElementById("loginSection");
 
+
 const dashboard =
     document.getElementById("dashboard");
+
 
 const loginForm =
     document.getElementById("loginForm");
 
+
 const adminKeyInput =
     document.getElementById("adminKey");
+
 
 const toggleKey =
     document.getElementById("toggleKey");
 
+
 const loginError =
     document.getElementById("loginError");
+
 
 const addCarButton =
     document.getElementById("addCarButton");
 
+
 const emptyAddButton =
     document.getElementById("emptyAddButton");
+
 
 const carSearch =
     document.getElementById("carSearch");
 
+
 const carTableBody =
     document.getElementById("carTableBody");
+
 
 const tableEmpty =
     document.getElementById("tableEmpty");
 
+
 const totalCars =
     document.getElementById("totalCars");
+
 
 const availableCars =
     document.getElementById("availableCars");
 
+
 const carModal =
     document.getElementById("carModal");
+
 
 const modalOverlay =
     document.getElementById("modalOverlay");
 
+
 const closeModal =
     document.getElementById("closeModal");
+
 
 const cancelCar =
     document.getElementById("cancelCar");
 
+
 const carForm =
     document.getElementById("carForm");
+
 
 const modalTitle =
     document.getElementById("modalTitle");
 
+
 const saveCarButton =
     document.getElementById("saveCar");
+
 
 const formMessage =
     document.getElementById("formMessage");
 
+
 const priceShow =
     document.getElementById("priceShow");
+
 
 const priceContact =
     document.getElementById("priceContact");
 
+
 const priceInputGroup =
     document.getElementById("priceInputGroup");
+
 
 const carPhotos =
     document.getElementById("carPhotos");
 
+
 const photoPreview =
     document.getElementById("photoPreview");
+
 
 const photoCount =
     document.getElementById("photoCount");
 
 
 /* =========================================================
-   HELPERS
+   4. HELPERS
    ========================================================= */
 
 function escapeHTML(value) {
@@ -171,6 +202,10 @@ function setField(id, value) {
 }
 
 
+/* =========================================================
+   5. LOGIN ERROR
+   ========================================================= */
+
 function showLoginError(message) {
 
     if (loginError) {
@@ -183,6 +218,10 @@ function showLoginError(message) {
 }
 
 
+/* =========================================================
+   6. FORM MESSAGE
+   ========================================================= */
+
 function showFormMessage(
     message,
     type = "success"
@@ -192,7 +231,8 @@ function showFormMessage(
         return;
     }
 
-    formMessage.textContent = message;
+    formMessage.textContent =
+        message;
 
     formMessage.style.color =
         type === "error"
@@ -210,7 +250,7 @@ function clearFormMessage() {
 
 
 /* =========================================================
-   N8N REQUEST
+   7. N8N REQUEST
    ========================================================= */
 
 async function sendToN8N(
@@ -223,12 +263,12 @@ async function sendToN8N(
     );
 
     console.log(
-        "Sending to n8n:"
+        "Sending request to n8n"
     );
 
     console.log({
-        action,
-        data
+        action: action,
+        data: data
     });
 
     console.log(
@@ -255,11 +295,15 @@ async function sendToN8N(
                     },
 
                     body: JSON.stringify({
+
                         action: action,
+
                         data: data,
+
                         timestamp:
                             new Date()
                                 .toISOString()
+
                     })
                 }
             );
@@ -271,40 +315,45 @@ async function sendToN8N(
         );
 
 
-        if (!response.ok) {
-
-            throw new Error(
-                `n8n HTTP ${response.status}`
-            );
-        }
-
-
-        const text =
+        const responseText =
             await response.text();
 
 
         console.log(
             "Raw n8n response:",
-            text
+            responseText
         );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `n8n HTTP ${response.status}: ${responseText || "No response body"}`
+            );
+        }
 
 
         let result = {};
 
 
-        if (text) {
+        if (responseText) {
 
             try {
 
                 result =
-                    JSON.parse(text);
+                    JSON.parse(
+                        responseText
+                    );
 
             } catch {
 
                 result = {
-                    message: text
+                    message:
+                        responseText
                 };
+
             }
+
         }
 
 
@@ -318,7 +367,10 @@ async function sendToN8N(
 
             success: true,
 
-            result: result
+            result: result,
+
+            status:
+                response.status
 
         };
 
@@ -335,15 +387,21 @@ async function sendToN8N(
 
             success: false,
 
-            error: error
+            error: error,
+
+            message:
+                error?.message ||
+                "Unknown network error"
 
         };
+
     }
+
 }
 
 
 /* =========================================================
-   LOGIN
+   8. LOGIN
    ========================================================= */
 
 function login() {
@@ -395,11 +453,12 @@ function login() {
     showLoginError(
         "Incorrect admin key."
     );
+
 }
 
 
 /* =========================================================
-   LOAD CARS
+   9. LOAD CARS
    ========================================================= */
 
 async function loadCars() {
@@ -434,8 +493,14 @@ async function loadCars() {
             response.error
         );
 
+
+        cars = [];
+
+
         renderCars();
+
         updateStats();
+
 
         return false;
     }
@@ -463,7 +528,9 @@ async function loadCars() {
         try {
 
             result =
-                JSON.parse(result);
+                JSON.parse(
+                    result
+                );
 
         } catch (error) {
 
@@ -472,11 +539,18 @@ async function loadCars() {
                 result
             );
 
+
+            cars = [];
+
+
             renderCars();
+
             updateStats();
+
 
             return false;
         }
+
     }
 
 
@@ -496,6 +570,7 @@ async function loadCars() {
 
     }
 
+
     else if (
         result &&
         Array.isArray(
@@ -507,6 +582,7 @@ async function loadCars() {
             result.cars;
 
     }
+
 
     else if (
         result &&
@@ -520,6 +596,7 @@ async function loadCars() {
 
     }
 
+
     else if (
         result &&
         Array.isArray(
@@ -531,6 +608,7 @@ async function loadCars() {
             result.items;
 
     }
+
 
     else if (
         result &&
@@ -549,12 +627,16 @@ async function loadCars() {
             try {
 
                 body =
-                    JSON.parse(body);
+                    JSON.parse(
+                        body
+                    );
 
             } catch {
 
                 body = null;
+
             }
+
         }
 
 
@@ -566,6 +648,7 @@ async function loadCars() {
                 body;
 
         }
+
 
         else if (
             body &&
@@ -579,6 +662,7 @@ async function loadCars() {
 
         }
 
+
         else if (
             body &&
             Array.isArray(
@@ -588,7 +672,22 @@ async function loadCars() {
 
             loadedCars =
                 body.data;
+
         }
+
+
+        else if (
+            body &&
+            Array.isArray(
+                body.items
+            )
+        ) {
+
+            loadedCars =
+                body.items;
+
+        }
+
     }
 
 
@@ -611,8 +710,14 @@ async function loadCars() {
             result
         );
 
+
+        cars = [];
+
+
         renderCars();
+
         updateStats();
+
 
         return false;
     }
@@ -659,7 +764,9 @@ async function loadCars() {
                             photos
                                 ? [photos]
                                 : [];
+
                     }
+
                 }
 
 
@@ -670,6 +777,7 @@ async function loadCars() {
                 ) {
 
                     photos = [];
+
                 }
 
 
@@ -677,42 +785,50 @@ async function loadCars() {
 
                     ...car,
 
-                    id: String(
-                        car.id ??
-                        car.ID ??
-                        car.Id ??
-                        ""
-                    ),
+                    id:
+                        String(
+                            car.id ??
+                            car.ID ??
+                            car.Id ??
+                            ""
+                        ),
+
 
                     brand:
                         car.brand ??
                         car.Brand ??
                         "",
 
+
                     model:
                         car.model ??
                         car.Model ??
                         "",
+
 
                     variant:
                         car.variant ??
                         car.Variant ??
                         "",
 
+
                     year:
                         car.year ??
                         car.Year ??
                         "",
+
 
                     fuel:
                         car.fuel ??
                         car.Fuel ??
                         "",
 
+
                     transmission:
                         car.transmission ??
                         car.Transmission ??
                         "",
+
 
                     km:
                         car.km ??
@@ -720,47 +836,57 @@ async function loadCars() {
                         car.Km ??
                         "",
 
+
                     owners:
                         car.owners ??
                         car.Owners ??
                         "",
+
 
                     registration:
                         car.registration ??
                         car.Registration ??
                         "",
 
+
                     insurance:
                         car.insurance ??
                         car.Insurance ??
                         "",
+
 
                     location:
                         car.location ??
                         car.Location ??
                         "Vijayawada",
 
+
                     price:
                         car.price ??
                         car.Price ??
                         "",
+
 
                     description:
                         car.description ??
                         car.Description ??
                         "",
 
+
                     photos:
                         photos,
+
 
                     status:
                         car.status ??
                         car.Status ??
                         "Available",
 
+
                     showPrice:
                         car.showPrice !== false &&
                         car.showPrice !== "false",
+
 
                     addedAt:
                         car.addedAt ??
@@ -770,11 +896,13 @@ async function loadCars() {
                             .toISOString()
 
                 };
+
             }
         );
 
 
     renderCars();
+
     updateStats();
 
 
@@ -798,11 +926,12 @@ async function loadCars() {
 
 
     return true;
+
 }
 
 
 /* =========================================================
-   DASHBOARD / SESSION
+   10. DASHBOARD / SESSION
    ========================================================= */
 
 async function showDashboard() {
@@ -818,8 +947,13 @@ async function showDashboard() {
 
 
     await loadCars();
+
 }
 
+
+/* =========================================================
+   11. CHECK LOGIN
+   ========================================================= */
 
 function checkLogin() {
 
@@ -830,9 +964,15 @@ function checkLogin() {
     ) {
 
         showDashboard();
+
     }
+
 }
 
+
+/* =========================================================
+   12. LOGOUT
+   ========================================================= */
 
 function logout() {
 
@@ -854,11 +994,12 @@ function logout() {
     if (adminKeyInput) {
         adminKeyInput.value = "";
     }
+
 }
 
 
 /* =========================================================
-   SORTING
+   13. SORTING
    ========================================================= */
 
 function getSortedCars() {
@@ -872,11 +1013,12 @@ function getSortedCars() {
                 a.addedAt || 0
             )
     );
+
 }
 
 
 /* =========================================================
-   SEARCH
+   14. SEARCH
    ========================================================= */
 
 function getFilteredCars() {
@@ -902,13 +1044,21 @@ function getFilteredCars() {
             const searchableText = [
 
                 car.brand,
+
                 car.model,
+
                 car.variant,
+
                 car.year,
+
                 car.fuel,
+
                 car.transmission,
+
                 car.km,
+
                 car.location,
+
                 car.registration
 
             ]
@@ -919,13 +1069,15 @@ function getFilteredCars() {
             return searchableText.includes(
                 query
             );
+
         }
     );
+
 }
 
 
 /* =========================================================
-   RENDER TABLE
+   15. RENDER TABLE
    ========================================================= */
 
 function renderCars() {
@@ -936,6 +1088,7 @@ function renderCars() {
     ) {
 
         return;
+
     }
 
 
@@ -952,6 +1105,7 @@ function renderCars() {
         tableEmpty.hidden = false;
 
         return;
+
     }
 
 
@@ -967,11 +1121,12 @@ function renderCars() {
 
 
     attachRowEvents();
+
 }
 
 
 /* =========================================================
-   CREATE ROW
+   16. CREATE ROW
    ========================================================= */
 
 function createCarRow(car) {
@@ -1008,7 +1163,6 @@ function createCarRow(car) {
                                 ></div>
                               `
                     }
-
 
                     <div>
 
@@ -1110,11 +1264,12 @@ function createCarRow(car) {
         </tr>
 
     `;
+
 }
 
 
 /* =========================================================
-   ROW EVENTS
+   17. ROW EVENTS
    ========================================================= */
 
 function attachRowEvents() {
@@ -1133,16 +1288,18 @@ function attachRowEvents() {
                         deleteCar(
                             this.dataset.id
                         );
+
                     }
                 );
 
             }
         );
+
 }
 
 
 /* =========================================================
-   STATS
+   18. STATS
    ========================================================= */
 
 function updateStats() {
@@ -1151,6 +1308,7 @@ function updateStats() {
 
         totalCars.textContent =
             cars.length;
+
     }
 
 
@@ -1164,12 +1322,14 @@ function updateStats() {
                     ).toLowerCase() !==
                     "sold"
             ).length;
+
     }
+
 }
 
 
 /* =========================================================
-   ADD CAR MODAL
+   19. ADD CAR MODAL
    ========================================================= */
 
 function openAddCarModal() {
@@ -1181,6 +1341,7 @@ function openAddCarModal() {
 
         modalTitle.textContent =
             "Add New Car";
+
     }
 
 
@@ -1191,6 +1352,7 @@ function openAddCarModal() {
 
         saveCarButton.disabled =
             false;
+
     }
 
 
@@ -1234,11 +1396,12 @@ function openAddCarModal() {
             "carBrand"
         )
         ?.focus();
+
 }
 
 
 /* =========================================================
-   CLOSE MODAL
+   20. CLOSE MODAL
    ========================================================= */
 
 function closeCarModal() {
@@ -1258,11 +1421,12 @@ function closeCarModal() {
     if (carPhotos) {
         carPhotos.value = "";
     }
+
 }
 
 
 /* =========================================================
-   SAVE CAR
+   21. SAVE CAR
    ========================================================= */
 
 async function handleCarSubmit(
@@ -1277,45 +1441,58 @@ async function handleCarSubmit(
     const brand =
         getValue("carBrand");
 
+
     const model =
         getValue("carModel");
+
 
     const variant =
         getValue("carVariant");
 
+
     const year =
         getValue("carYear");
+
 
     const fuel =
         getValue("carFuel");
 
+
     const transmission =
         getValue("carTransmission");
+
 
     const km =
         getValue("carKm");
 
+
     const owners =
         getValue("carOwners");
 
+
     const registration =
         getValue("carRegistration");
+
 
     const insurance =
         document.getElementById(
             "carInsurance"
         )?.value || "";
 
+
     const location =
         getValue("carLocation");
 
+
     const price =
         getValue("carPrice");
+
 
     const description =
         getValue(
             "carDescription"
         );
+
 
     const showPrice =
         priceShow?.checked ?? true;
@@ -1337,6 +1514,7 @@ async function handleCarSubmit(
         );
 
         return;
+
     }
 
 
@@ -1351,6 +1529,7 @@ async function handleCarSubmit(
         );
 
         return;
+
     }
 
 
@@ -1366,39 +1545,64 @@ async function handleCarSubmit(
                 model
             ),
 
+
         brand,
+
         model,
+
         variant,
+
 
         year:
             Number(year),
 
+
         fuel,
+
         transmission,
+
         km,
+
         owners,
+
         registration,
+
         insurance,
+
         location,
+
         price,
+
         showPrice,
+
         description,
+
 
         /*
          * ALL PHOTOS BELONG TO THIS ONE CAR
          */
+
         photos:
             [
                 ...temporaryPhotos
             ],
 
+
         status:
             "Available",
+
 
         addedAt:
             new Date()
                 .toISOString()
+
     };
+
+
+    console.log(
+        "CAR BEING SENT:",
+        car
+    );
 
 
     /* -----------------------------------------------------
@@ -1412,7 +1616,14 @@ async function handleCarSubmit(
 
         saveCarButton.textContent =
             "Saving...";
+
     }
+
+
+    showFormMessage(
+        "Saving car...",
+        "success"
+    );
 
 
     /* -----------------------------------------------------
@@ -1439,6 +1650,7 @@ async function handleCarSubmit(
 
         saveCarButton.textContent =
             "Save Car";
+
     }
 
 
@@ -1450,19 +1662,26 @@ async function handleCarSubmit(
         !response.success
     ) {
 
+        const errorMessage =
+            response.message ||
+            response.error?.message ||
+            "Unknown network error.";
+
+
         showFormMessage(
-            "Could not save to server. Check n8n and browser console.",
+            `Could not save: ${errorMessage}`,
             "error"
         );
 
 
         console.error(
-            "Save failed:",
+            "SAVE FAILED:",
             response.error
         );
 
 
         return;
+
     }
 
 
@@ -1475,6 +1694,12 @@ async function handleCarSubmit(
     );
 
 
+    console.log(
+        "Server response:",
+        response.result
+    );
+
+
     /*
      * Add the car locally so it immediately
      * appears in the admin table.
@@ -1484,6 +1709,7 @@ async function handleCarSubmit(
 
 
     renderCars();
+
     updateStats();
 
 
@@ -1497,11 +1723,12 @@ async function handleCarSubmit(
         closeCarModal,
         700
     );
+
 }
 
 
 /* =========================================================
-   CREATE CAR ID
+   22. CREATE CAR ID
    ========================================================= */
 
 function createCarId(
@@ -1525,6 +1752,7 @@ function createCarId(
     let id =
         base || "car";
 
+
     let counter =
         1;
 
@@ -1540,16 +1768,19 @@ function createCarId(
         id =
             `${base}-${counter}`;
 
+
         counter++;
+
     }
 
 
     return id;
+
 }
 
 
 /* =========================================================
-   DELETE SINGLE CAR
+   23. DELETE SINGLE CAR
    ========================================================= */
 
 async function deleteCar(id) {
@@ -1592,8 +1823,9 @@ async function deleteCar(id) {
     ) {
 
         alert(
-            "Could not delete the car from the server."
+            `Could not delete the car.\n\n${response.message || "Network error."}`
         );
+
 
         return;
     }
@@ -1608,12 +1840,14 @@ async function deleteCar(id) {
 
 
     renderCars();
+
     updateStats();
+
 }
 
 
 /* =========================================================
-   PRICE DISPLAY
+   24. PRICE DISPLAY
    ========================================================= */
 
 function updatePriceField() {
@@ -1626,11 +1860,12 @@ function updatePriceField() {
     priceInputGroup.hidden =
         priceContact?.checked ??
         false;
+
 }
 
 
 /* =========================================================
-   PHOTO UPLOAD
+   25. PHOTO UPLOAD
    ========================================================= */
 
 function handlePhotoUpload(
@@ -1687,6 +1922,12 @@ function handlePhotoUpload(
                 )
             ) {
 
+                console.warn(
+                    "Skipped non-image file:",
+                    file.name
+                );
+
+
                 return;
             }
 
@@ -1704,6 +1945,7 @@ function handlePhotoUpload(
 
 
                     renderPhotoPreview();
+
                 };
 
 
@@ -1714,6 +1956,7 @@ function handlePhotoUpload(
                         "Could not read image:",
                         file.name
                     );
+
                 };
 
 
@@ -1733,17 +1976,19 @@ function handlePhotoUpload(
         alert(
             `Only ${MAX_PHOTOS} photos can be added.`
         );
+
     }
 
 
     if (carPhotos) {
         carPhotos.value = "";
     }
+
 }
 
 
 /* =========================================================
-   PHOTO PREVIEW
+   26. PHOTO PREVIEW
    ========================================================= */
 
 function renderPhotoPreview() {
@@ -1752,6 +1997,7 @@ function renderPhotoPreview() {
 
         photoCount.textContent =
             `${temporaryPhotos.length} / ${MAX_PHOTOS}`;
+
     }
 
 
@@ -1829,16 +2075,18 @@ function renderPhotoPreview() {
 
 
                         renderPhotoPreview();
+
                     }
                 );
 
             }
         );
+
 }
 
 
 /* =========================================================
-   LOGOUT BUTTON
+   27. LOGOUT BUTTON
    ========================================================= */
 
 function createLogoutButton() {
@@ -1873,11 +2121,14 @@ function createLogoutButton() {
     button.id =
         "logoutButton";
 
+
     button.className =
         "btn btn-secondary";
 
+
     button.textContent =
         "Logout";
+
 
     button.type =
         "button";
@@ -1892,16 +2143,19 @@ function createLogoutButton() {
     header.appendChild(
         button
     );
+
 }
 
 
 /* =========================================================
-   EVENT LISTENERS
+   28. EVENT LISTENERS
    ========================================================= */
 
 function setupEventListeners() {
 
-    /* LOGIN */
+    /* -----------------------------------------------------
+       LOGIN
+       ----------------------------------------------------- */
 
     loginForm?.addEventListener(
         "submit",
@@ -1910,11 +2164,14 @@ function setupEventListeners() {
             event.preventDefault();
 
             login();
+
         }
     );
 
 
-    /* SHOW / HIDE KEY */
+    /* -----------------------------------------------------
+       SHOW / HIDE KEY
+       ----------------------------------------------------- */
 
     toggleKey?.addEventListener(
         "click",
@@ -1933,33 +2190,43 @@ function setupEventListeners() {
                 adminKeyInput.type =
                     "text";
 
+
                 toggleKey.textContent =
                     "🙈";
+
 
                 toggleKey.setAttribute(
                     "aria-label",
                     "Hide admin key"
                 );
 
-            } else {
+            }
+
+
+            else {
 
                 adminKeyInput.type =
                     "password";
 
+
                 toggleKey.textContent =
                     "👁";
+
 
                 toggleKey.setAttribute(
                     "aria-label",
                     "Show admin key"
                 );
+
             }
 
         }
     );
 
 
-    /* ADD */
+    /* -----------------------------------------------------
+       ADD
+       ----------------------------------------------------- */
 
     addCarButton?.addEventListener(
         "click",
@@ -1973,7 +2240,9 @@ function setupEventListeners() {
     );
 
 
-    /* SEARCH */
+    /* -----------------------------------------------------
+       SEARCH
+       ----------------------------------------------------- */
 
     carSearch?.addEventListener(
         "input",
@@ -1981,7 +2250,9 @@ function setupEventListeners() {
     );
 
 
-    /* CLOSE */
+    /* -----------------------------------------------------
+       CLOSE
+       ----------------------------------------------------- */
 
     closeModal?.addEventListener(
         "click",
@@ -2001,7 +2272,9 @@ function setupEventListeners() {
     );
 
 
-    /* FORM */
+    /* -----------------------------------------------------
+       FORM
+       ----------------------------------------------------- */
 
     carForm?.addEventListener(
         "submit",
@@ -2009,7 +2282,9 @@ function setupEventListeners() {
     );
 
 
-    /* PRICE */
+    /* -----------------------------------------------------
+       PRICE
+       ----------------------------------------------------- */
 
     priceShow?.addEventListener(
         "change",
@@ -2023,7 +2298,9 @@ function setupEventListeners() {
     );
 
 
-    /* PHOTOS */
+    /* -----------------------------------------------------
+       PHOTOS
+       ----------------------------------------------------- */
 
     carPhotos?.addEventListener(
         "change",
@@ -2031,7 +2308,9 @@ function setupEventListeners() {
     );
 
 
-    /* ESCAPE */
+    /* -----------------------------------------------------
+       ESCAPE
+       ----------------------------------------------------- */
 
     document.addEventListener(
         "keydown",
@@ -2044,15 +2323,17 @@ function setupEventListeners() {
             ) {
 
                 closeCarModal();
+
             }
 
         }
     );
+
 }
 
 
 /* =========================================================
-   INITIALIZE
+   29. INITIALIZE
    ========================================================= */
 
 function initializeAdmin() {
@@ -2064,11 +2345,12 @@ function initializeAdmin() {
     createLogoutButton();
 
     checkLogin();
+
 }
 
 
 /* =========================================================
-   START
+   30. START
    ========================================================= */
 
 if (
@@ -2081,7 +2363,10 @@ if (
         initializeAdmin
     );
 
-} else {
+}
+
+else {
 
     initializeAdmin();
+
 }
