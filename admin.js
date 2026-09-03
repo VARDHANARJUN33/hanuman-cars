@@ -9,9 +9,7 @@
    Actions:
        get_cars
        add_car
-       update_car
        delete_car
-       delete_cars
 
    IMPORTANT:
    Client-side passwords are NOT secure.
@@ -45,16 +43,12 @@ const SESSION_KEY = "hanumanAdminLoggedIn";
 const MAX_PHOTOS = 10;
 
 
-
 /* =========================================================
    STATE
    ========================================================= */
 
 let cars = [];
-let selectedCars = new Set();
-let editingCarId = null;
 let temporaryPhotos = [];
-
 
 
 /* =========================================================
@@ -85,9 +79,6 @@ const addCarButton =
 const emptyAddButton =
     document.getElementById("emptyAddButton");
 
-const deleteSelectedButton =
-    document.getElementById("deleteSelectedButton");
-
 const carSearch =
     document.getElementById("carSearch");
 
@@ -97,17 +88,11 @@ const carTableBody =
 const tableEmpty =
     document.getElementById("tableEmpty");
 
-const selectAllCars =
-    document.getElementById("selectAllCars");
-
 const totalCars =
     document.getElementById("totalCars");
 
 const availableCars =
     document.getElementById("availableCars");
-
-const selectedCarsCount =
-    document.getElementById("selectedCars");
 
 const carModal =
     document.getElementById("carModal");
@@ -152,7 +137,6 @@ const photoCount =
     document.getElementById("photoCount");
 
 
-
 /* =========================================================
    HELPERS
    ========================================================= */
@@ -168,14 +152,12 @@ function escapeHTML(value) {
 }
 
 
-
 function getValue(id) {
 
     return (
         document.getElementById(id)?.value.trim() || ""
     );
 }
-
 
 
 function setField(id, value) {
@@ -189,7 +171,6 @@ function setField(id, value) {
 }
 
 
-
 function showLoginError(message) {
 
     if (loginError) {
@@ -200,7 +181,6 @@ function showLoginError(message) {
         adminKeyInput.focus();
     }
 }
-
 
 
 function showFormMessage(
@@ -221,14 +201,12 @@ function showFormMessage(
 }
 
 
-
 function clearFormMessage() {
 
     if (formMessage) {
         formMessage.textContent = "";
     }
 }
-
 
 
 /* =========================================================
@@ -263,7 +241,6 @@ async function sendToN8N(
     );
 
 
-
     try {
 
         const response =
@@ -288,12 +265,10 @@ async function sendToN8N(
             );
 
 
-
         console.log(
             "n8n HTTP status:",
             response.status
         );
-
 
 
         if (!response.ok) {
@@ -304,10 +279,8 @@ async function sendToN8N(
         }
 
 
-
         const text =
             await response.text();
-
 
 
         console.log(
@@ -316,9 +289,7 @@ async function sendToN8N(
         );
 
 
-
         let result = {};
-
 
 
         if (text) {
@@ -337,12 +308,10 @@ async function sendToN8N(
         }
 
 
-
         console.log(
             "Parsed n8n response:",
             result
         );
-
 
 
         return {
@@ -354,14 +323,12 @@ async function sendToN8N(
         };
 
 
-
     } catch (error) {
 
         console.error(
             "n8n request failed:",
             error
         );
-
 
 
         return {
@@ -375,7 +342,6 @@ async function sendToN8N(
 }
 
 
-
 /* =========================================================
    LOGIN
    ========================================================= */
@@ -384,7 +350,6 @@ function login() {
 
     const enteredKey =
         adminKeyInput?.value || "";
-
 
 
     if (!enteredKey) {
@@ -397,12 +362,10 @@ function login() {
     }
 
 
-
     const authenticated =
         ADMIN_KEYS.includes(
             enteredKey
         );
-
 
 
     if (authenticated) {
@@ -413,17 +376,14 @@ function login() {
         );
 
 
-
         if (loginError) {
             loginError.textContent = "";
         }
 
 
-
         if (adminKeyInput) {
             adminKeyInput.value = "";
         }
-
 
 
         showDashboard();
@@ -432,12 +392,10 @@ function login() {
     }
 
 
-
     showLoginError(
         "Incorrect admin key."
     );
 }
-
 
 
 /* =========================================================
@@ -459,12 +417,10 @@ async function loadCars() {
     );
 
 
-
     const response =
         await sendToN8N(
             "get_cars"
         );
-
 
 
     /* -----------------------------------------------------
@@ -478,11 +434,6 @@ async function loadCars() {
             response.error
         );
 
-        /*
-         * IMPORTANT:
-         * Do NOT erase existing cars.
-         */
-
         renderCars();
         updateStats();
 
@@ -490,17 +441,14 @@ async function loadCars() {
     }
 
 
-
     let result =
         response.result;
-
 
 
     console.log(
         "RAW GET CARS RESPONSE:",
         result
     );
-
 
 
     /* -----------------------------------------------------
@@ -532,9 +480,7 @@ async function loadCars() {
     }
 
 
-
     let loadedCars = [];
-
 
 
     /* -----------------------------------------------------
@@ -595,7 +541,6 @@ async function loadCars() {
             result.body;
 
 
-
         if (
             typeof body ===
             "string"
@@ -611,7 +556,6 @@ async function loadCars() {
                 body = null;
             }
         }
-
 
 
         if (
@@ -648,7 +592,6 @@ async function loadCars() {
     }
 
 
-
     /* -----------------------------------------------------
        VALIDATION
        ----------------------------------------------------- */
@@ -668,10 +611,6 @@ async function loadCars() {
             result
         );
 
-        /*
-         * DO NOT CLEAR CARS
-         */
-
         renderCars();
         updateStats();
 
@@ -679,12 +618,10 @@ async function loadCars() {
     }
 
 
-
     console.log(
         "Cars received from server:",
         loadedCars.length
     );
-
 
 
     /* -----------------------------------------------------
@@ -697,7 +634,6 @@ async function loadCars() {
 
                 let photos =
                     car.photos;
-
 
 
                 /*
@@ -727,7 +663,6 @@ async function loadCars() {
                 }
 
 
-
                 if (
                     !Array.isArray(
                         photos
@@ -738,12 +673,9 @@ async function loadCars() {
                 }
 
 
-
                 return {
 
                     ...car,
-
-
 
                     id: String(
                         car.id ??
@@ -752,49 +684,35 @@ async function loadCars() {
                         ""
                     ),
 
-
-
                     brand:
                         car.brand ??
                         car.Brand ??
                         "",
-
-
 
                     model:
                         car.model ??
                         car.Model ??
                         "",
 
-
-
                     variant:
                         car.variant ??
                         car.Variant ??
                         "",
-
-
 
                     year:
                         car.year ??
                         car.Year ??
                         "",
 
-
-
                     fuel:
                         car.fuel ??
                         car.Fuel ??
                         "",
 
-
-
                     transmission:
                         car.transmission ??
                         car.Transmission ??
                         "",
-
-
 
                     km:
                         car.km ??
@@ -802,67 +720,47 @@ async function loadCars() {
                         car.Km ??
                         "",
 
-
-
                     owners:
                         car.owners ??
                         car.Owners ??
                         "",
-
-
 
                     registration:
                         car.registration ??
                         car.Registration ??
                         "",
 
-
-
                     insurance:
                         car.insurance ??
                         car.Insurance ??
                         "",
-
-
 
                     location:
                         car.location ??
                         car.Location ??
                         "Vijayawada",
 
-
-
                     price:
                         car.price ??
                         car.Price ??
                         "",
-
-
 
                     description:
                         car.description ??
                         car.Description ??
                         "",
 
-
-
                     photos:
                         photos,
-
-
 
                     status:
                         car.status ??
                         car.Status ??
                         "Available",
 
-
-
                     showPrice:
                         car.showPrice !== false &&
                         car.showPrice !== "false",
-
-
 
                     addedAt:
                         car.addedAt ??
@@ -876,14 +774,8 @@ async function loadCars() {
         );
 
 
-
-    selectedCars.clear();
-
-
-
     renderCars();
     updateStats();
-
 
 
     console.log(
@@ -905,10 +797,8 @@ async function loadCars() {
     );
 
 
-
     return true;
 }
-
 
 
 /* =========================================================
@@ -922,16 +812,13 @@ async function showDashboard() {
     }
 
 
-
     if (dashboard) {
         dashboard.hidden = false;
     }
 
 
-
     await loadCars();
 }
-
 
 
 function checkLogin() {
@@ -947,7 +834,6 @@ function checkLogin() {
 }
 
 
-
 function logout() {
 
     sessionStorage.removeItem(
@@ -955,11 +841,9 @@ function logout() {
     );
 
 
-
     if (dashboard) {
         dashboard.hidden = true;
     }
-
 
 
     if (loginSection) {
@@ -967,16 +851,10 @@ function logout() {
     }
 
 
-
-    selectedCars.clear();
-
-
-
     if (adminKeyInput) {
         adminKeyInput.value = "";
     }
 }
-
 
 
 /* =========================================================
@@ -997,7 +875,6 @@ function getSortedCars() {
 }
 
 
-
 /* =========================================================
    SEARCH
    ========================================================= */
@@ -1010,16 +887,13 @@ function getFilteredCars() {
             .toLowerCase() || "";
 
 
-
     const sorted =
         getSortedCars();
-
 
 
     if (!query) {
         return sorted;
     }
-
 
 
     return sorted.filter(
@@ -1042,14 +916,12 @@ function getFilteredCars() {
                 .toLowerCase();
 
 
-
             return searchableText.includes(
                 query
             );
         }
     );
 }
-
 
 
 /* =========================================================
@@ -1067,10 +939,8 @@ function renderCars() {
     }
 
 
-
     const filteredCars =
         getFilteredCars();
-
 
 
     if (
@@ -1081,15 +951,11 @@ function renderCars() {
 
         tableEmpty.hidden = false;
 
-        updateSelectAllState();
-
         return;
     }
 
 
-
     tableEmpty.hidden = true;
-
 
 
     carTableBody.innerHTML =
@@ -1100,12 +966,8 @@ function renderCars() {
             .join("");
 
 
-
     attachRowEvents();
-
-    updateSelectAllState();
 }
-
 
 
 /* =========================================================
@@ -1123,37 +985,9 @@ function createCarRow(car) {
             : "";
 
 
-
-    const checked =
-        selectedCars.has(
-            String(car.id)
-        )
-            ? "checked"
-            : "";
-
-
-
     return `
 
         <tr data-car-id="${escapeHTML(car.id)}">
-
-            <td>
-
-                <input
-                    type="checkbox"
-                    class="car-checkbox"
-                    data-id="${escapeHTML(car.id)}"
-                    ${checked}
-                    aria-label="Select ${escapeHTML(
-                        car.brand
-                    )} ${escapeHTML(
-                        car.model
-                    )}"
-                >
-
-            </td>
-
-
 
             <td>
 
@@ -1176,7 +1010,6 @@ function createCarRow(car) {
                     }
 
 
-
                     <div>
 
                         <div class="car-table-name">
@@ -1190,7 +1023,6 @@ function createCarRow(car) {
                             )}
 
                         </div>
-
 
 
                         <div class="car-table-brand">
@@ -1208,7 +1040,6 @@ function createCarRow(car) {
             </td>
 
 
-
             <td>
                 ${escapeHTML(
                     String(
@@ -1218,7 +1049,6 @@ function createCarRow(car) {
             </td>
 
 
-
             <td>
                 ${escapeHTML(
                     car.fuel || "-"
@@ -1226,13 +1056,11 @@ function createCarRow(car) {
             </td>
 
 
-
             <td>
                 ${escapeHTML(
                     car.km || "-"
                 )}
             </td>
-
 
 
             <td>
@@ -1246,7 +1074,6 @@ function createCarRow(car) {
                 }
 
             </td>
-
 
 
             <td>
@@ -1263,21 +1090,9 @@ function createCarRow(car) {
             </td>
 
 
-
             <td>
 
                 <div class="table-actions">
-
-                    <button
-                        type="button"
-                        class="table-action edit-car"
-                        data-id="${escapeHTML(car.id)}"
-                        title="Edit car"
-                    >
-                        ✏️
-                    </button>
-
-
 
                     <button
                         type="button"
@@ -1298,79 +1113,11 @@ function createCarRow(car) {
 }
 
 
-
 /* =========================================================
    ROW EVENTS
    ========================================================= */
 
 function attachRowEvents() {
-
-    document
-        .querySelectorAll(
-            ".car-checkbox"
-        )
-        .forEach(
-            checkbox => {
-
-                checkbox.addEventListener(
-                    "change",
-                    function () {
-
-                        const id =
-                            String(
-                                this.dataset.id
-                            );
-
-
-
-                        if (
-                            this.checked
-                        ) {
-
-                            selectedCars.add(
-                                id
-                            );
-
-                        } else {
-
-                            selectedCars.delete(
-                                id
-                            );
-                        }
-
-
-
-                        updateStats();
-                        updateSelectAllState();
-                    }
-                );
-
-            }
-        );
-
-
-
-    document
-        .querySelectorAll(
-            ".edit-car"
-        )
-        .forEach(
-            button => {
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        editCar(
-                            this.dataset.id
-                        );
-                    }
-                );
-
-            }
-        );
-
-
 
     document
         .querySelectorAll(
@@ -1394,105 +1141,6 @@ function attachRowEvents() {
 }
 
 
-
-/* =========================================================
-   SELECT ALL
-   ========================================================= */
-
-function toggleSelectAll() {
-
-    const filteredCars =
-        getFilteredCars();
-
-
-
-    if (
-        selectAllCars.checked
-    ) {
-
-        filteredCars.forEach(
-            car => {
-
-                selectedCars.add(
-                    String(car.id)
-                );
-
-            }
-        );
-
-    } else {
-
-        filteredCars.forEach(
-            car => {
-
-                selectedCars.delete(
-                    String(car.id)
-                );
-
-            }
-        );
-    }
-
-
-
-    renderCars();
-    updateStats();
-}
-
-
-
-function updateSelectAllState() {
-
-    if (!selectAllCars) {
-        return;
-    }
-
-
-
-    const filteredCars =
-        getFilteredCars();
-
-
-
-    if (
-        filteredCars.length === 0
-    ) {
-
-        selectAllCars.checked =
-            false;
-
-        selectAllCars.indeterminate =
-            false;
-
-        return;
-    }
-
-
-
-    const selectedCount =
-        filteredCars.filter(
-            car =>
-                selectedCars.has(
-                    String(car.id)
-                )
-        ).length;
-
-
-
-    selectAllCars.checked =
-        selectedCount ===
-        filteredCars.length;
-
-
-
-    selectAllCars.indeterminate =
-        selectedCount > 0 &&
-        selectedCount <
-            filteredCars.length;
-}
-
-
-
 /* =========================================================
    STATS
    ========================================================= */
@@ -1506,7 +1154,6 @@ function updateStats() {
     }
 
 
-
     if (availableCars) {
 
         availableCars.textContent =
@@ -1518,16 +1165,7 @@ function updateStats() {
                     "sold"
             ).length;
     }
-
-
-
-    if (selectedCarsCount) {
-
-        selectedCarsCount.textContent =
-            selectedCars.size;
-    }
 }
-
 
 
 /* =========================================================
@@ -1536,10 +1174,7 @@ function updateStats() {
 
 function openAddCarModal() {
 
-    editingCarId = null;
-
     temporaryPhotos = [];
-
 
 
     if (modalTitle) {
@@ -1547,7 +1182,6 @@ function openAddCarModal() {
         modalTitle.textContent =
             "Add New Car";
     }
-
 
 
     if (saveCarButton) {
@@ -1560,9 +1194,7 @@ function openAddCarModal() {
     }
 
 
-
     carForm?.reset();
-
 
 
     setField(
@@ -1571,17 +1203,14 @@ function openAddCarModal() {
     );
 
 
-
     if (priceShow) {
         priceShow.checked = true;
     }
 
 
-
     if (priceContact) {
         priceContact.checked = false;
     }
-
 
 
     updatePriceField();
@@ -1591,16 +1220,13 @@ function openAddCarModal() {
     clearFormMessage();
 
 
-
     if (carModal) {
         carModal.hidden = false;
     }
 
 
-
     document.body.style.overflow =
         "hidden";
-
 
 
     document
@@ -1609,7 +1235,6 @@ function openAddCarModal() {
         )
         ?.focus();
 }
-
 
 
 /* =========================================================
@@ -1623,16 +1248,11 @@ function closeCarModal() {
     }
 
 
-
     document.body.style.overflow =
         "";
 
 
-
-    editingCarId = null;
-
     temporaryPhotos = [];
-
 
 
     if (carPhotos) {
@@ -1641,182 +1261,8 @@ function closeCarModal() {
 }
 
 
-
 /* =========================================================
-   EDIT CAR
-   ========================================================= */
-
-function editCar(id) {
-
-    const car =
-        cars.find(
-            item =>
-                String(item.id) ===
-                String(id)
-        );
-
-
-
-    if (!car) {
-        return;
-    }
-
-
-
-    editingCarId =
-        String(car.id);
-
-
-
-    if (modalTitle) {
-
-        modalTitle.textContent =
-            "Edit Car";
-    }
-
-
-
-    if (saveCarButton) {
-
-        saveCarButton.textContent =
-            "Update Car";
-
-        saveCarButton.disabled =
-            false;
-    }
-
-
-
-    setField(
-        "carId",
-        car.id
-    );
-
-    setField(
-        "carBrand",
-        car.brand
-    );
-
-    setField(
-        "carModel",
-        car.model
-    );
-
-    setField(
-        "carVariant",
-        car.variant
-    );
-
-    setField(
-        "carYear",
-        car.year
-    );
-
-    setField(
-        "carFuel",
-        car.fuel
-    );
-
-    setField(
-        "carTransmission",
-        car.transmission
-    );
-
-    setField(
-        "carKm",
-        car.km
-    );
-
-    setField(
-        "carOwners",
-        car.owners
-    );
-
-    setField(
-        "carRegistration",
-        car.registration
-    );
-
-    setField(
-        "carInsurance",
-        car.insurance
-    );
-
-    setField(
-        "carLocation",
-        car.location
-    );
-
-    setField(
-        "carPrice",
-        car.price
-    );
-
-    setField(
-        "carDescription",
-        car.description
-    );
-
-
-
-    if (
-        priceShow &&
-        priceContact
-    ) {
-
-        if (
-            car.showPrice !== false
-        ) {
-
-            priceShow.checked =
-                true;
-
-            priceContact.checked =
-                false;
-
-        } else {
-
-            priceShow.checked =
-                false;
-
-            priceContact.checked =
-                true;
-        }
-    }
-
-
-
-    temporaryPhotos =
-        Array.isArray(
-            car.photos
-        )
-            ? [...car.photos]
-            : [];
-
-
-
-    updatePriceField();
-
-    renderPhotoPreview();
-
-    clearFormMessage();
-
-
-
-    if (carModal) {
-        carModal.hidden = false;
-    }
-
-
-
-    document.body.style.overflow =
-        "hidden";
-}
-
-
-
-/* =========================================================
-   SAVE / UPDATE CAR
+   SAVE CAR
    ========================================================= */
 
 async function handleCarSubmit(
@@ -1826,7 +1272,6 @@ async function handleCarSubmit(
     event.preventDefault();
 
     clearFormMessage();
-
 
 
     const brand =
@@ -1876,7 +1321,6 @@ async function handleCarSubmit(
         priceShow?.checked ?? true;
 
 
-
     /* -----------------------------------------------------
        VALIDATION
        ----------------------------------------------------- */
@@ -1896,7 +1340,6 @@ async function handleCarSubmit(
     }
 
 
-
     if (
         showPrice &&
         !price
@@ -1911,151 +1354,51 @@ async function handleCarSubmit(
     }
 
 
-
-    const isEditing =
-        Boolean(
-            editingCarId
-        );
-
-
-
-    let previousCar =
-        null;
-
-    let car =
-        null;
-
-
-
     /* -----------------------------------------------------
-       UPDATE
+       CREATE CAR
        ----------------------------------------------------- */
 
-    if (isEditing) {
+    const car = {
 
-        const index =
-            cars.findIndex(
-                item =>
-                    String(item.id) ===
-                    String(editingCarId)
-            );
+        id:
+            createCarId(
+                brand,
+                model
+            ),
 
+        brand,
+        model,
+        variant,
 
+        year:
+            Number(year),
 
-        if (index === -1) {
+        fuel,
+        transmission,
+        km,
+        owners,
+        registration,
+        insurance,
+        location,
+        price,
+        showPrice,
+        description,
 
-            showFormMessage(
-                "Car could not be found.",
-                "error"
-            );
+        /*
+         * ALL PHOTOS BELONG TO THIS ONE CAR
+         */
+        photos:
+            [
+                ...temporaryPhotos
+            ],
 
-            return;
-        }
+        status:
+            "Available",
 
-
-
-        previousCar = {
-
-            ...cars[index],
-
-            photos:
-                Array.isArray(
-                    cars[index].photos
-                )
-                    ? [
-                        ...cars[index].photos
-                    ]
-                    : []
-        };
-
-
-
-        car = {
-
-            ...cars[index],
-
-            brand,
-            model,
-            variant,
-
-            year:
-                Number(year),
-
-            fuel,
-            transmission,
-            km,
-            owners,
-            registration,
-            insurance,
-            location,
-            price,
-            showPrice,
-            description,
-
-            photos:
-                [
-                    ...temporaryPhotos
-                ]
-        };
-
-
-
-        cars[index] =
-            car;
-    }
-
-
-
-    /* -----------------------------------------------------
-       ADD
-       ----------------------------------------------------- */
-
-    else {
-
-        car = {
-
-            id:
-                createCarId(
-                    brand,
-                    model
-                ),
-
-            brand,
-            model,
-            variant,
-
-            year:
-                Number(year),
-
-            fuel,
-            transmission,
-            km,
-            owners,
-            registration,
-            insurance,
-            location,
-            price,
-            showPrice,
-            description,
-
-            photos:
-                [
-                    ...temporaryPhotos
-                ],
-
-            status:
-                "Available",
-
-            addedAt:
-                new Date()
-                    .toISOString()
-        };
-
-
-
-        cars.push(car);
-    }
-
+        addedAt:
+            new Date()
+                .toISOString()
+    };
 
 
     /* -----------------------------------------------------
@@ -2068,32 +1411,21 @@ async function handleCarSubmit(
             true;
 
         saveCarButton.textContent =
-            isEditing
-                ? "Updating..."
-                : "Saving...";
+            "Saving...";
     }
-
 
 
     /* -----------------------------------------------------
        SEND TO N8N
        ----------------------------------------------------- */
 
-    const action =
-        isEditing
-            ? "update_car"
-            : "add_car";
-
-
-
     const response =
         await sendToN8N(
-            action,
+            "add_car",
             {
                 car: car
             }
         );
-
 
 
     /* -----------------------------------------------------
@@ -2106,11 +1438,8 @@ async function handleCarSubmit(
             false;
 
         saveCarButton.textContent =
-            isEditing
-                ? "Update Car"
-                : "Save Car";
+            "Save Car";
     }
-
 
 
     /* -----------------------------------------------------
@@ -2121,48 +1450,10 @@ async function handleCarSubmit(
         !response.success
     ) {
 
-        if (
-            isEditing &&
-            previousCar
-        ) {
-
-            const index =
-                cars.findIndex(
-                    item =>
-                        String(item.id) ===
-                        String(editingCarId)
-                );
-
-
-
-            if (index !== -1) {
-
-                cars[index] =
-                    previousCar;
-            }
-
-        } else {
-
-            cars =
-                cars.filter(
-                    item =>
-                        String(item.id) !==
-                        String(car.id)
-                );
-        }
-
-
-
-        renderCars();
-        updateStats();
-
-
-
         showFormMessage(
             "Could not save to server. Check n8n and browser console.",
             "error"
         );
-
 
 
         console.error(
@@ -2171,10 +1462,8 @@ async function handleCarSubmit(
         );
 
 
-
         return;
     }
-
 
 
     /* -----------------------------------------------------
@@ -2186,25 +1475,22 @@ async function handleCarSubmit(
     );
 
 
-
     /*
-     * First show the locally saved car.
-     * This means the admin table immediately
-     * displays the new car.
+     * Add the car locally so it immediately
+     * appears in the admin table.
      */
+
+    cars.push(car);
+
 
     renderCars();
     updateStats();
 
 
-
     showFormMessage(
-        isEditing
-            ? "Car updated successfully."
-            : "Car added successfully.",
+        "Car added successfully.",
         "success"
     );
-
 
 
     setTimeout(
@@ -2212,7 +1498,6 @@ async function handleCarSubmit(
         700
     );
 }
-
 
 
 /* =========================================================
@@ -2237,13 +1522,11 @@ function createCarId(
             );
 
 
-
     let id =
         base || "car";
 
     let counter =
         1;
-
 
 
     while (
@@ -2261,10 +1544,8 @@ function createCarId(
     }
 
 
-
     return id;
 }
-
 
 
 /* =========================================================
@@ -2281,11 +1562,9 @@ async function deleteCar(id) {
         );
 
 
-
     if (!car) {
         return;
     }
-
 
 
     const confirmed =
@@ -2294,11 +1573,9 @@ async function deleteCar(id) {
         );
 
 
-
     if (!confirmed) {
         return;
     }
-
 
 
     const response =
@@ -2308,7 +1585,6 @@ async function deleteCar(id) {
                 carId: car.id
             }
         );
-
 
 
     if (
@@ -2323,7 +1599,6 @@ async function deleteCar(id) {
     }
 
 
-
     cars =
         cars.filter(
             item =>
@@ -2332,98 +1607,9 @@ async function deleteCar(id) {
         );
 
 
-
-    selectedCars.delete(
-        String(id)
-    );
-
-
-
     renderCars();
     updateStats();
 }
-
-
-
-/* =========================================================
-   DELETE SELECTED
-   ========================================================= */
-
-async function deleteSelectedCars() {
-
-    if (
-        selectedCars.size === 0
-    ) {
-
-        alert(
-            "Select at least one car first."
-        );
-
-        return;
-    }
-
-
-
-    const confirmed =
-        confirm(
-            `Delete ${selectedCars.size} selected car(s)?\n\nThis action cannot be undone.`
-        );
-
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-
-    const deletedCarIds =
-        [...selectedCars];
-
-
-
-    const response =
-        await sendToN8N(
-            "delete_cars",
-            {
-                carIds:
-                    deletedCarIds
-            }
-        );
-
-
-
-    if (
-        !response.success
-    ) {
-
-        alert(
-            "Could not delete the selected cars from the server."
-        );
-
-        return;
-    }
-
-
-
-    cars =
-        cars.filter(
-            car =>
-                !selectedCars.has(
-                    String(car.id)
-                )
-        );
-
-
-
-    selectedCars.clear();
-
-
-
-    renderCars();
-    updateStats();
-}
-
 
 
 /* =========================================================
@@ -2437,12 +1623,10 @@ function updatePriceField() {
     }
 
 
-
     priceInputGroup.hidden =
         priceContact?.checked ??
         false;
 }
-
 
 
 /* =========================================================
@@ -2459,17 +1643,14 @@ function handlePhotoUpload(
         );
 
 
-
     if (!files.length) {
         return;
     }
 
 
-
     const remainingSlots =
         MAX_PHOTOS -
         temporaryPhotos.length;
-
 
 
     if (
@@ -2481,16 +1662,13 @@ function handlePhotoUpload(
         );
 
 
-
         if (carPhotos) {
             carPhotos.value = "";
         }
 
 
-
         return;
     }
-
 
 
     const filesToAdd =
@@ -2498,7 +1676,6 @@ function handlePhotoUpload(
             0,
             remainingSlots
         );
-
 
 
     filesToAdd.forEach(
@@ -2514,10 +1691,8 @@ function handlePhotoUpload(
             }
 
 
-
             const reader =
                 new FileReader();
-
 
 
             reader.onload =
@@ -2528,10 +1703,8 @@ function handlePhotoUpload(
                     );
 
 
-
                     renderPhotoPreview();
                 };
-
 
 
             reader.onerror =
@@ -2544,14 +1717,12 @@ function handlePhotoUpload(
                 };
 
 
-
             reader.readAsDataURL(
                 file
             );
 
         }
     );
-
 
 
     if (
@@ -2565,12 +1736,10 @@ function handlePhotoUpload(
     }
 
 
-
     if (carPhotos) {
         carPhotos.value = "";
     }
 }
-
 
 
 /* =========================================================
@@ -2586,11 +1755,9 @@ function renderPhotoPreview() {
     }
 
 
-
     if (!photoPreview) {
         return;
     }
-
 
 
     if (
@@ -2603,7 +1770,6 @@ function renderPhotoPreview() {
 
         return;
     }
-
 
 
     photoPreview.innerHTML =
@@ -2638,7 +1804,6 @@ function renderPhotoPreview() {
             .join("");
 
 
-
     photoPreview
         .querySelectorAll(
             ".remove-photo"
@@ -2657,12 +1822,10 @@ function renderPhotoPreview() {
                             );
 
 
-
                         temporaryPhotos.splice(
                             index,
                             1
                         );
-
 
 
                         renderPhotoPreview();
@@ -2672,7 +1835,6 @@ function renderPhotoPreview() {
             }
         );
 }
-
 
 
 /* =========================================================
@@ -2687,11 +1849,9 @@ function createLogoutButton() {
         );
 
 
-
     if (!header) {
         return;
     }
-
 
 
     if (
@@ -2704,12 +1864,10 @@ function createLogoutButton() {
     }
 
 
-
     const button =
         document.createElement(
             "button"
         );
-
 
 
     button.id =
@@ -2725,19 +1883,16 @@ function createLogoutButton() {
         "button";
 
 
-
     button.addEventListener(
         "click",
         logout
     );
 
 
-
     header.appendChild(
         button
     );
 }
-
 
 
 /* =========================================================
@@ -2759,7 +1914,6 @@ function setupEventListeners() {
     );
 
 
-
     /* SHOW / HIDE KEY */
 
     toggleKey?.addEventListener(
@@ -2769,7 +1923,6 @@ function setupEventListeners() {
             if (!adminKeyInput) {
                 return;
             }
-
 
 
             if (
@@ -2806,7 +1959,6 @@ function setupEventListeners() {
     );
 
 
-
     /* ADD */
 
     addCarButton?.addEventListener(
@@ -2815,21 +1967,10 @@ function setupEventListeners() {
     );
 
 
-
     emptyAddButton?.addEventListener(
         "click",
         openAddCarModal
     );
-
-
-
-    /* DELETE SELECTED */
-
-    deleteSelectedButton?.addEventListener(
-        "click",
-        deleteSelectedCars
-    );
-
 
 
     /* SEARCH */
@@ -2840,16 +1981,6 @@ function setupEventListeners() {
     );
 
 
-
-    /* SELECT ALL */
-
-    selectAllCars?.addEventListener(
-        "change",
-        toggleSelectAll
-    );
-
-
-
     /* CLOSE */
 
     closeModal?.addEventListener(
@@ -2858,19 +1989,16 @@ function setupEventListeners() {
     );
 
 
-
     cancelCar?.addEventListener(
         "click",
         closeCarModal
     );
 
 
-
     modalOverlay?.addEventListener(
         "click",
         closeCarModal
     );
-
 
 
     /* FORM */
@@ -2881,7 +2009,6 @@ function setupEventListeners() {
     );
 
 
-
     /* PRICE */
 
     priceShow?.addEventListener(
@@ -2890,12 +2017,10 @@ function setupEventListeners() {
     );
 
 
-
     priceContact?.addEventListener(
         "change",
         updatePriceField
     );
-
 
 
     /* PHOTOS */
@@ -2904,7 +2029,6 @@ function setupEventListeners() {
         "change",
         handlePhotoUpload
     );
-
 
 
     /* ESCAPE */
@@ -2927,7 +2051,6 @@ function setupEventListeners() {
 }
 
 
-
 /* =========================================================
    INITIALIZE
    ========================================================= */
@@ -2942,7 +2065,6 @@ function initializeAdmin() {
 
     checkLogin();
 }
-
 
 
 /* =========================================================
