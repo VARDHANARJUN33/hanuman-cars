@@ -180,8 +180,8 @@
                         </h1>
 
                         <p class="dashboard-description">
-                            Add, edit and remove cars
-                            shown on the public website.
+                            Add and remove cars shown
+                            on the public website.
                         </p>
 
                     </div>
@@ -192,16 +192,18 @@
                         <button
                             class="btn btn-primary"
                             id="addCarButton"
+                            type="button"
                         >
                             + Add New Car
                         </button>
 
 
                         <button
-                            class="btn btn-danger-outline"
-                            id="deleteSelectedButton"
+                            class="btn btn-secondary"
+                            id="loadCarsButton"
+                            type="button"
                         >
-                            Delete Selected
+                            Load Cars
                         </button>
 
                     </div>
@@ -242,22 +244,6 @@
                         <strong
                             class="stat-value"
                             id="availableCars"
-                        >
-                            0
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span class="stat-label">
-                            Selected
-                        </span>
-
-                        <strong
-                            class="stat-value"
-                            id="selectedCars"
                         >
                             0
                         </strong>
@@ -318,17 +304,6 @@
 
                                 <tr>
 
-                                    <th class="check-column">
-
-                                        <input
-                                            type="checkbox"
-                                            id="selectAllCars"
-                                            aria-label="Select all cars"
-                                        >
-
-                                    </th>
-
-
                                     <th>
                                         Car
                                     </th>
@@ -360,7 +335,7 @@
 
 
                                     <th>
-                                        Actions
+                                        Action
                                     </th>
 
                                 </tr>
@@ -406,6 +381,7 @@
                         <button
                             class="btn btn-primary"
                             id="emptyAddButton"
+                            type="button"
                         >
                             + Add New Car
                         </button>
@@ -421,7 +397,7 @@
 
 
         <!-- ==========================================
-             ADD / EDIT CAR MODAL
+             ADD CAR MODAL
              ========================================== -->
 
         <div
@@ -858,6 +834,7 @@
 
                                 <p>
                                     Add up to 10 photos.
+                                    All photos belong to this car.
                                 </p>
 
                             </div>
@@ -900,7 +877,7 @@
                                 </strong>
 
                                 <small>
-                                    Click to select images
+                                    Select multiple images
                                 </small>
 
                             </label>
