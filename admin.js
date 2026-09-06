@@ -3,8 +3,13 @@
    ADMIN DASHBOARD JAVASCRIPT
    =========================================================
 
-   n8n webhook:
+   n8n webhooks:
+
+   ADMIN ACTIONS:
    https://cricwith27.app.n8n.cloud/webhook/hanuman-cars
+
+   CUSTOMER / GET CARS:
+   https://cricwith27.app.n8n.cloud/webhook/cars
 
    Actions:
        get_cars
@@ -23,6 +28,15 @@
 
 const N8N_WEBHOOK_URL =
     "https://cricwith27.app.n8n.cloud/webhook/hanuman-cars";
+
+
+/* GET CARS WEBHOOK
+   Used only for loading existing cars
+   from Google Sheets into Admin.
+*/
+
+const CARS_API_URL =
+    "https://cricwith27.app.n8n.cloud/webhook/cars";
 
 
 const ADMIN_KEYS = [
@@ -63,106 +77,80 @@ let temporaryPhotos = [];
 const loginSection =
     document.getElementById("loginSection");
 
-
 const dashboard =
     document.getElementById("dashboard");
-
 
 const loginForm =
     document.getElementById("loginForm");
 
-
 const adminKeyInput =
     document.getElementById("adminKey");
-
 
 const toggleKey =
     document.getElementById("toggleKey");
 
-
 const loginError =
     document.getElementById("loginError");
-
 
 const addCarButton =
     document.getElementById("addCarButton");
 
-
 const emptyAddButton =
     document.getElementById("emptyAddButton");
-
 
 const carSearch =
     document.getElementById("carSearch");
 
-
 const carTableBody =
     document.getElementById("carTableBody");
-
 
 const tableEmpty =
     document.getElementById("tableEmpty");
 
-
 const totalCars =
     document.getElementById("totalCars");
-
 
 const availableCars =
     document.getElementById("availableCars");
 
-
 const carModal =
     document.getElementById("carModal");
-
 
 const modalOverlay =
     document.getElementById("modalOverlay");
 
-
 const closeModal =
     document.getElementById("closeModal");
-
 
 const cancelCar =
     document.getElementById("cancelCar");
 
-
 const carForm =
     document.getElementById("carForm");
-
 
 const modalTitle =
     document.getElementById("modalTitle");
 
-
 const saveCarButton =
     document.getElementById("saveCar");
-
 
 const formMessage =
     document.getElementById("formMessage");
 
-
 const priceShow =
     document.getElementById("priceShow");
-
 
 const priceContact =
     document.getElementById("priceContact");
 
-
 const priceInputGroup =
     document.getElementById("priceInputGroup");
-
 
 const carPhotos =
     document.getElementById("carPhotos");
 
-
 const photoPreview =
     document.getElementById("photoPreview");
-
 
 const photoCount =
     document.getElementById("photoCount");
@@ -468,7 +456,12 @@ async function loadCars() {
     );
 
     console.log(
-        "Loading cars from n8n..."
+        "Loading existing cars from GET webhook..."
+    );
+
+    console.log(
+        "Cars API:",
+        CARS_API_URL
     );
 
     console.log(
@@ -476,238 +469,472 @@ async function loadCars() {
     );
 
 
-    const response =
-        await sendToN8N(
-            "get_cars"
-        );
+    try {
 
+        const response =
+            await fetch(
+                CARS_API_URL,
+                {
+                    method: "GET",
 
-    /* -----------------------------------------------------
-       REQUEST FAILED
-       ----------------------------------------------------- */
-
-    if (!response.success) {
-
-        console.error(
-            "GET CARS FAILED:",
-            response.error
-        );
-
-
-        cars = [];
-
-
-        renderCars();
-
-        updateStats();
-
-
-        return false;
-    }
-
-
-    let result =
-        response.result;
-
-
-    console.log(
-        "RAW GET CARS RESPONSE:",
-        result
-    );
-
-
-    /* -----------------------------------------------------
-       PARSE STRING RESPONSE
-       ----------------------------------------------------- */
-
-    if (
-        typeof result ===
-        "string"
-    ) {
-
-        try {
-
-            result =
-                JSON.parse(
-                    result
-                );
-
-        } catch (error) {
-
-            console.error(
-                "Could not parse n8n response:",
-                result
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    }
+                }
             );
 
 
-            cars = [];
+        console.log(
+            "Cars API HTTP status:",
+            response.status
+        );
 
+
+        const responseText =
+            await response.text();
+
+
+        console.log(
+            "Raw cars API response:",
+            responseText
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP ${response.status}: ${responseText || "No response body"}`
+            );
+        }
+
+
+        let result = {};
+
+
+        if (responseText) {
+
+            try {
+
+                result =
+                    JSON.parse(
+                        responseText
+                    );
+
+            } catch {
+
+                result =
+                    responseText;
+
+            }
+
+        }
+
+
+        console.log(
+            "Parsed cars API response:",
+            result
+        );
+
+
+        /* -----------------------------------------------------
+           POSSIBLE RESPONSE FORMATS
+           ----------------------------------------------------- */
+
+        let loadedCars = [];
+
+
+        /* Direct array */
+
+        if (
+            Array.isArray(result)
+        ) {
+
+            loadedCars =
+                result;
+
+        }
+
+
+        /* { cars: [...] } */
+
+        else if (
+            result &&
+            Array.isArray(
+                result.cars
+            )
+        ) {
+
+            loadedCars =
+                result.cars;
+
+        }
+
+
+        /* { data: [...] } */
+
+        else if (
+            result &&
+            Array.isArray(
+                result.data
+            )
+        ) {
+
+            loadedCars =
+                result.data;
+
+        }
+
+
+        /* { items: [...] } */
+
+        else if (
+            result &&
+            Array.isArray(
+                result.items
+            )
+        ) {
+
+            loadedCars =
+                result.items;
+
+        }
+
+
+        /* { body: [...] } */
+
+        else if (
+            result &&
+            result.body
+        ) {
+
+            let body =
+                result.body;
+
+
+            if (
+                typeof body ===
+                "string"
+            ) {
+
+                try {
+
+                    body =
+                        JSON.parse(
+                            body
+                        );
+
+                } catch {
+
+                    body = null;
+
+                }
+
+            }
+
+
+            if (
+                Array.isArray(body)
+            ) {
+
+                loadedCars =
+                    body;
+
+            }
+
+
+            else if (
+                body &&
+                Array.isArray(
+                    body.cars
+                )
+            ) {
+
+                loadedCars =
+                    body.cars;
+
+            }
+
+
+            else if (
+                body &&
+                Array.isArray(
+                    body.data
+                )
+            ) {
+
+                loadedCars =
+                    body.data;
+
+            }
+
+
+            else if (
+                body &&
+                Array.isArray(
+                    body.items
+                )
+            ) {
+
+                loadedCars =
+                    body.items;
+
+            }
+
+        }
+
+
+        /* -----------------------------------------------------
+           VALIDATION
+           ----------------------------------------------------- */
+
+        if (
+            !Array.isArray(
+                loadedCars
+            )
+        ) {
+
+            console.error(
+                "GET /cars did not return a valid array."
+            );
+
+            console.error(
+                "Response was:",
+                result
+            );
+
+            cars = [];
 
             renderCars();
 
             updateStats();
 
-
             return false;
-        }
-
-    }
-
-
-    let loadedCars = [];
-
-
-    /* -----------------------------------------------------
-       POSSIBLE RESPONSE FORMATS
-       ----------------------------------------------------- */
-
-    if (
-        Array.isArray(result)
-    ) {
-
-        loadedCars =
-            result;
-
-    }
-
-
-    else if (
-        result &&
-        Array.isArray(
-            result.cars
-        )
-    ) {
-
-        loadedCars =
-            result.cars;
-
-    }
-
-
-    else if (
-        result &&
-        Array.isArray(
-            result.data
-        )
-    ) {
-
-        loadedCars =
-            result.data;
-
-    }
-
-
-    else if (
-        result &&
-        Array.isArray(
-            result.items
-        )
-    ) {
-
-        loadedCars =
-            result.items;
-
-    }
-
-
-    else if (
-        result &&
-        result.body
-    ) {
-
-        let body =
-            result.body;
-
-
-        if (
-            typeof body ===
-            "string"
-        ) {
-
-            try {
-
-                body =
-                    JSON.parse(
-                        body
-                    );
-
-            } catch {
-
-                body = null;
-
-            }
 
         }
 
 
-        if (
-            Array.isArray(body)
-        ) {
-
-            loadedCars =
-                body;
-
-        }
-
-
-        else if (
-            body &&
-            Array.isArray(
-                body.cars
-            )
-        ) {
-
-            loadedCars =
-                body.cars;
-
-        }
-
-
-        else if (
-            body &&
-            Array.isArray(
-                body.data
-            )
-        ) {
-
-            loadedCars =
-                body.data;
-
-        }
-
-
-        else if (
-            body &&
-            Array.isArray(
-                body.items
-            )
-        ) {
-
-            loadedCars =
-                body.items;
-
-        }
-
-    }
-
-
-    /* -----------------------------------------------------
-       VALIDATION
-       ----------------------------------------------------- */
-
-    if (
-        !Array.isArray(
-            loadedCars
-        )
-    ) {
-
-        console.error(
-            "GET CARS did not return a valid array."
+        console.log(
+            "Cars received from Google Sheets:",
+            loadedCars.length
         );
 
+
+        /* -----------------------------------------------------
+           NORMALIZE CARS
+           ----------------------------------------------------- */
+
+        cars =
+            loadedCars.map(
+                car => {
+
+                    let photos =
+                        car.photos;
+
+
+                    /*
+                     * Photos may be stored
+                     * as JSON text in Google Sheets.
+                     */
+
+                    if (
+                        typeof photos ===
+                        "string"
+                    ) {
+
+                        try {
+
+                            photos =
+                                JSON.parse(
+                                    photos
+                                );
+
+                        } catch {
+
+                            photos =
+                                photos
+                                    ? photos
+                                        .split(
+                                            /[\n,]+/
+                                        )
+                                        .map(
+                                            photo =>
+                                                photo.trim()
+                                        )
+                                        .filter(
+                                            Boolean
+                                        )
+                                    : [];
+
+                        }
+
+                    }
+
+
+                    if (
+                        !Array.isArray(
+                            photos
+                        )
+                    ) {
+
+                        photos = [];
+
+                    }
+
+
+                    return {
+
+                        ...car,
+
+
+                        id:
+                            String(
+                                car.id ??
+                                car.ID ??
+                                car.Id ??
+                                ""
+                            ),
+
+
+                        brand:
+                            car.brand ??
+                            car.Brand ??
+                            "",
+
+
+                        model:
+                            car.model ??
+                            car.Model ??
+                            "",
+
+
+                        variant:
+                            car.variant ??
+                            car.Variant ??
+                            "",
+
+
+                        year:
+                            car.year ??
+                            car.Year ??
+                            "",
+
+
+                        fuel:
+                            car.fuel ??
+                            car.Fuel ??
+                            "",
+
+
+                        transmission:
+                            car.transmission ??
+                            car.Transmission ??
+                            "",
+
+
+                        km:
+                            car.km ??
+                            car.KM ??
+                            car.Km ??
+                            "",
+
+
+                        owners:
+                            car.owners ??
+                            car.Owners ??
+                            "",
+
+
+                        registration:
+                            car.registration ??
+                            car.Registration ??
+                            "",
+
+
+                        insurance:
+                            car.insurance ??
+                            car.Insurance ??
+                            "",
+
+
+                        location:
+                            car.location ??
+                            car.Location ??
+                            "Vijayawada",
+
+
+                        price:
+                            car.price ??
+                            car.Price ??
+                            "",
+
+
+                        description:
+                            car.description ??
+                            car.Description ??
+                            "",
+
+
+                        photos:
+                            photos,
+
+
+                        status:
+                            car.status ??
+                            car.Status ??
+                            "Available",
+
+
+                        showPrice:
+                            car.showPrice !== false &&
+                            car.showPrice !== "false",
+
+
+                        addedAt:
+                            car.addedAt ??
+                            car.added_at ??
+                            car.AddedAt ??
+                            new Date()
+                                .toISOString()
+
+                    };
+
+                }
+            );
+
+
+        renderCars();
+
+        updateStats();
+
+
+        console.log(
+            "================================="
+        );
+
+        console.log(
+            "FINAL CARS IN ADMIN:",
+            cars
+        );
+
+        console.log(
+            "TOTAL CARS:",
+            cars.length
+        );
+
+        console.log(
+            "================================="
+        );
+
+
+        return true;
+
+
+    } catch (error) {
+
         console.error(
-            "Response was:",
-            result
+            "Failed to load cars:",
+            error
         );
 
 
@@ -720,212 +947,8 @@ async function loadCars() {
 
 
         return false;
+
     }
-
-
-    console.log(
-        "Cars received from server:",
-        loadedCars.length
-    );
-
-
-    /* -----------------------------------------------------
-       NORMALIZE CARS
-       ----------------------------------------------------- */
-
-    cars =
-        loadedCars.map(
-            car => {
-
-                let photos =
-                    car.photos;
-
-
-                /*
-                 * Photos may be stored
-                 * as JSON text in Google Sheets.
-                 */
-
-                if (
-                    typeof photos ===
-                    "string"
-                ) {
-
-                    try {
-
-                        photos =
-                            JSON.parse(
-                                photos
-                            );
-
-                    } catch {
-
-                        photos =
-                            photos
-                                ? [photos]
-                                : [];
-
-                    }
-
-                }
-
-
-                if (
-                    !Array.isArray(
-                        photos
-                    )
-                ) {
-
-                    photos = [];
-
-                }
-
-
-                return {
-
-                    ...car,
-
-                    id:
-                        String(
-                            car.id ??
-                            car.ID ??
-                            car.Id ??
-                            ""
-                        ),
-
-
-                    brand:
-                        car.brand ??
-                        car.Brand ??
-                        "",
-
-
-                    model:
-                        car.model ??
-                        car.Model ??
-                        "",
-
-
-                    variant:
-                        car.variant ??
-                        car.Variant ??
-                        "",
-
-
-                    year:
-                        car.year ??
-                        car.Year ??
-                        "",
-
-
-                    fuel:
-                        car.fuel ??
-                        car.Fuel ??
-                        "",
-
-
-                    transmission:
-                        car.transmission ??
-                        car.Transmission ??
-                        "",
-
-
-                    km:
-                        car.km ??
-                        car.KM ??
-                        car.Km ??
-                        "",
-
-
-                    owners:
-                        car.owners ??
-                        car.Owners ??
-                        "",
-
-
-                    registration:
-                        car.registration ??
-                        car.Registration ??
-                        "",
-
-
-                    insurance:
-                        car.insurance ??
-                        car.Insurance ??
-                        "",
-
-
-                    location:
-                        car.location ??
-                        car.Location ??
-                        "Vijayawada",
-
-
-                    price:
-                        car.price ??
-                        car.Price ??
-                        "",
-
-
-                    description:
-                        car.description ??
-                        car.Description ??
-                        "",
-
-
-                    photos:
-                        photos,
-
-
-                    status:
-                        car.status ??
-                        car.Status ??
-                        "Available",
-
-
-                    showPrice:
-                        car.showPrice !== false &&
-                        car.showPrice !== "false",
-
-
-                    addedAt:
-                        car.addedAt ??
-                        car.added_at ??
-                        car.AddedAt ??
-                        new Date()
-                            .toISOString()
-
-                };
-
-            }
-        );
-
-
-    renderCars();
-
-    updateStats();
-
-
-    console.log(
-        "================================="
-    );
-
-    console.log(
-        "FINAL CARS IN ADMIN:",
-        cars
-    );
-
-    console.log(
-        "TOTAL CARS:",
-        cars.length
-    );
-
-    console.log(
-        "================================="
-    );
-
-
-    return true;
 
 }
 
