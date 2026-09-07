@@ -36,7 +36,7 @@ const N8N_WEBHOOK_URL =
 */
 
 const CARS_API_URL =
-    "https://cricwith27.app.n8n.cloud/webhook-test/cars";
+    "https://cricwith27.app.n8n.cloud/webhook/cars";
 
 
 const ADMIN_KEYS = [
