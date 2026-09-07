@@ -1,31 +1,38 @@
 /* =========================================================
    HANUMAN CARS
-   Complete Website CSS
+   FUTURISTIC CUSTOMER WEBSITE
+   VISUAL LAYER ONLY
    ========================================================= */
 
 
 /* =========================================================
-   1. GLOBAL VARIABLES
+   1. VARIABLES
    ========================================================= */
 
 :root {
 
-    --text: #202124;
-    --muted: #5f6368;
+    --bg: #05070a;
+    --bg-soft: #090d12;
+    --panel: rgba(12, 17, 23, 0.72);
+    --panel-strong: #0b1016;
 
-    --line: #e8eaed;
+    --text: #f5f7fa;
+    --muted: #89939f;
+    --muted-light: #b8c1ca;
 
-    --soft: #f8f9fa;
+    --line: rgba(255,255,255,0.09);
+    --line-bright: rgba(255,255,255,0.16);
 
-    --blue: #1a73e8;
-    --blue-dark: #1557b0;
+    --cyan: #00e5ff;
+    --blue: #3478ff;
+    --green: #2cff9a;
 
     --white: #ffffff;
 
     --shadow:
-        0 12px 35px rgba(32, 33, 36, 0.09);
+        0 30px 90px rgba(0,0,0,0.45);
 
-    --radius: 18px;
+    --radius: 22px;
 
 }
 
@@ -43,21 +50,57 @@
 
 html {
     scroll-behavior: smooth;
+    background: var(--bg);
 }
 
 
 body {
 
     font-family:
+        Inter,
+        "Segoe UI",
         Arial,
         Helvetica,
         sans-serif;
 
     color: var(--text);
 
-    background: var(--white);
+    background:
+        radial-gradient(
+            circle at 80% 10%,
+            rgba(0,229,255,0.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 10% 50%,
+            rgba(52,120,255,0.06),
+            transparent 30%
+        ),
+        var(--bg);
 
     line-height: 1.55;
+
+    overflow-x: hidden;
+
+}
+
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 999;
+
+    opacity: 0.025;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
 
 }
 
@@ -80,201 +123,681 @@ a {
 }
 
 
+::selection {
+    background: var(--cyan);
+    color: #001014;
+}
+
+
 /* =========================================================
-   3. COMMON CONTAINER
+   3. BACKGROUND EFFECTS
+   ========================================================= */
+
+.background-grid {
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: -3;
+
+    opacity: 0.20;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.025) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        70px 70px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 85%
+        );
+
+}
+
+
+.ambient {
+
+    position: fixed;
+
+    width: 450px;
+    height: 450px;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    filter: blur(100px);
+
+    opacity: 0.12;
+
+    z-index: -2;
+
+    animation:
+        ambientFloat 12s ease-in-out infinite alternate;
+
+}
+
+
+.ambient-one {
+
+    top: 10%;
+    right: -150px;
+
+    background: var(--cyan);
+
+}
+
+
+.ambient-two {
+
+    bottom: 5%;
+    left: -180px;
+
+    background: var(--blue);
+
+    animation-delay: -5s;
+
+}
+
+
+@keyframes ambientFloat {
+
+    from {
+        transform: translate3d(0,0,0);
+    }
+
+    to {
+        transform: translate3d(30px,-30px,0);
+    }
+
+}
+
+
+/* =========================================================
+   4. CONTAINER
    ========================================================= */
 
 .container {
 
-    width: min(1180px, 92%);
+    width:
+        min(1220px, 92%);
 
-    margin-left: auto;
-    margin-right: auto;
+    margin-left:
+        auto;
+
+    margin-right:
+        auto;
 
 }
 
 
 /* =========================================================
-   4. HEADER
+   5. HEADER
    ========================================================= */
 
 .site-header {
 
-    width: min(1180px, 92%);
+    width:
+        min(1220px, 92%);
 
-    min-height: 76px;
+    height:
+        82px;
 
-    margin-left: auto;
-    margin-right: auto;
+    margin:
+        0 auto;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    gap: 24px;
+    gap:
+        30px;
 
-    position: relative;
+    position:
+        relative;
 
-    z-index: 20;
-
-    background:
-        rgba(255, 255, 255, 0.94);
+    z-index:
+        100;
 
 }
 
 
-/* ---------- Logo ---------- */
+.site-header::after {
+
+    content: "";
+
+    position:
+        absolute;
+
+    left: 0;
+    right: 0;
+
+    bottom: 0;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--line-bright),
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   6. BRAND
+   ========================================================= */
 
 .brand {
 
-    text-decoration: none;
+    display:
+        flex;
 
-    font-size: 21px;
+    align-items:
+        center;
 
-    font-weight: 800;
+    gap:
+        11px;
 
-    letter-spacing: -0.6px;
+    text-decoration:
+        none;
 
-    white-space: nowrap;
+}
+
+
+.brand-mark {
+
+    width:
+        40px;
+
+    height:
+        40px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        1px solid rgba(0,229,255,0.45);
+
+    border-radius:
+        11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,229,255,0.12),
+            rgba(52,120,255,0.04)
+        );
+
+    color:
+        var(--cyan);
+
+    font-size:
+        12px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    box-shadow:
+        0 0 25px rgba(0,229,255,0.10);
+
+}
+
+
+.brand-mark.small {
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    border-radius:
+        9px;
+
+}
+
+
+.brand-text {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    line-height:
+        1;
 
 }
 
 
 .brand-main {
 
-    font-weight: 400;
+    font-size:
+        17px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        2.5px;
 
 }
 
 
 .brand-sub {
 
-    font-weight: 800;
+    margin-top:
+        5px;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        4px;
 
 }
 
 
-/* ---------- Navigation ---------- */
+/* =========================================================
+   7. NAVIGATION
+   ========================================================= */
 
 .nav {
 
-    display: flex;
+    display:
+        flex;
 
-    gap: 28px;
+    align-items:
+        center;
+
+    gap:
+        8px;
 
 }
 
 
 .nav a {
 
-    color: var(--muted);
+    position:
+        relative;
 
-    text-decoration: none;
+    display:
+        flex;
 
-    font-size: 14px;
+    align-items:
+        center;
 
-    font-weight: 600;
+    gap:
+        8px;
+
+    padding:
+        11px 15px;
+
+    border:
+        1px solid transparent;
+
+    border-radius:
+        10px;
+
+    color:
+        var(--muted);
+
+    text-decoration:
+        none;
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        0.8px;
 
     transition:
-        color 0.2s ease;
+        all 0.25s ease;
+
+}
+
+
+.nav a span {
+
+    color:
+        rgba(0,229,255,0.5);
+
+    font-size:
+        9px;
+
+    font-family:
+        monospace;
 
 }
 
 
 .nav a:hover {
 
-    color: var(--blue);
+    color:
+        var(--white);
+
+    border-color:
+        var(--line);
+
+    background:
+        rgba(255,255,255,0.035);
 
 }
 
 
-/* ---------- Mobile Menu Button ---------- */
+.nav a:hover span {
 
-.menu-toggle {
-
-    display: none;
-
-    border: none;
-
-    background: transparent;
-
-    font-size: 25px;
-
-    cursor: pointer;
-
-    color: var(--text);
+    color:
+        var(--cyan);
 
 }
 
 
 /* =========================================================
-   5. HERO SECTION
+   8. MOBILE MENU
    ========================================================= */
 
-.hero {
+.menu-toggle {
 
-    min-height: 610px;
+    display:
+        none;
 
-    position: relative;
+    width:
+        43px;
 
-    overflow: hidden;
+    height:
+        43px;
+
+    border:
+        1px solid var(--line-bright);
 
     border-radius:
-        0 0 26px 26px;
+        10px;
 
     background:
+        rgba(255,255,255,0.04);
 
-        url(
-            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1800&q=85"
-        )
+    color:
+        var(--white);
 
-        center / cover no-repeat;
+    cursor:
+        pointer;
 
 }
 
 
-/* ---------- Hero Overlay ---------- */
+/* =========================================================
+   9. HERO
+   ========================================================= */
+
+.hero {
+
+    min-height:
+        calc(100vh - 82px);
+
+    min-height:
+        720px;
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    isolation:
+        isolate;
+
+    border-bottom:
+        1px solid var(--line);
+
+}
+
+
+.hero-image {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        -4;
+
+    background:
+
+        url(
+            "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2000&q=90"
+        )
+
+        center / cover no-repeat;
+
+    transform:
+        scale(1.04);
+
+    animation:
+        heroZoom 14s ease-out forwards;
+
+}
+
+
+@keyframes heroZoom {
+
+    from {
+        transform: scale(1.08);
+    }
+
+    to {
+        transform: scale(1.02);
+    }
+
+}
+
 
 .hero-overlay {
 
-    position: absolute;
+    position:
+        absolute;
 
-    inset: 0;
+    inset:
+        0;
+
+    z-index:
+        -3;
 
     background:
 
         linear-gradient(
             90deg,
-            rgba(255,255,255,0.98) 0%,
-            rgba(255,255,255,0.91) 44%,
-            rgba(255,255,255,0.18) 100%
+            rgba(5,7,10,1) 0%,
+            rgba(5,7,10,0.96) 25%,
+            rgba(5,7,10,0.68) 55%,
+            rgba(5,7,10,0.28) 100%
         );
 
 }
 
 
-/* ---------- Hero Inner ---------- */
+.hero-grid {
 
-.hero-inner {
+    position:
+        absolute;
 
-    min-height: 610px;
+    inset:
+        0;
 
-    position: relative;
+    z-index:
+        -2;
 
-    display: flex;
+    opacity:
+        0.35;
 
-    align-items: center;
+    background-image:
+
+        linear-gradient(
+            rgba(0,229,255,0.07) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0,229,255,0.07) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        90px 90px;
+
+    mask-image:
+        linear-gradient(
+            to right,
+            black,
+            transparent 75%
+        );
+
+    animation:
+        gridMove 18s linear infinite;
 
 }
 
 
-/* ---------- Hero Text ---------- */
+@keyframes gridMove {
+
+    from {
+        background-position:
+            0 0;
+    }
+
+    to {
+        background-position:
+            90px 90px;
+    }
+
+}
+
+
+.hero-scanline {
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    top:
+        0;
+
+    height:
+        1px;
+
+    background:
+        var(--cyan);
+
+    opacity:
+        0.45;
+
+    box-shadow:
+        0 0 20px var(--cyan);
+
+    animation:
+        scan 6s linear infinite;
+
+}
+
+
+@keyframes scan {
+
+    0% {
+        top: 5%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.45;
+    }
+
+    50% {
+        opacity: 0.25;
+    }
+
+    100% {
+        top: 95%;
+        opacity: 0;
+    }
+
+}
+
+
+/* =========================================================
+   10. HERO INNER
+   ========================================================= */
+
+.hero-inner {
+
+    min-height:
+        720px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    position:
+        relative;
+
+}
+
 
 .hero-copy {
 
-    max-width: 680px;
+    width:
+        min(700px, 100%);
 
     padding:
         70px 0;
@@ -282,17 +805,95 @@ a {
 }
 
 
+.hero-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    margin-bottom:
+        28px;
+
+    padding:
+        8px 12px;
+
+    border:
+        1px solid rgba(0,229,255,0.20);
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(0,229,255,0.04);
+
+    color:
+        var(--muted-light);
+
+    font-size:
+        9px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.8px;
+
+}
+
+
+.status-dot {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--green);
+
+    box-shadow:
+        0 0 12px var(--green);
+
+    animation:
+        pulse 1.8s infinite;
+
+}
+
+
+@keyframes pulse {
+
+    50% {
+        opacity: 0.35;
+    }
+
+}
+
+
 .eyebrow {
 
-    color: var(--blue);
+    margin-bottom:
+        13px;
 
-    font-size: 12px;
+    color:
+        var(--cyan);
 
-    font-weight: 800;
+    font-size:
+        10px;
 
-    letter-spacing: 1.5px;
+    font-weight:
+        900;
 
-    margin-bottom: 12px;
+    letter-spacing:
+        3px;
 
 }
 
@@ -300,100 +901,124 @@ a {
 .hero h1 {
 
     font-size:
-        clamp(46px, 7vw, 78px);
+        clamp(58px, 9vw, 125px);
 
-    line-height: 1.02;
+    line-height:
+        0.88;
 
-    letter-spacing: -4px;
+    letter-spacing:
+        -6px;
 
-    margin-bottom: 24px;
+    font-weight:
+        950;
+
+    margin-bottom:
+        30px;
+
+    text-transform:
+        uppercase;
 
 }
 
 
 .hero h1 span {
 
-    color: var(--blue);
+    display:
+        block;
+
+    color:
+        transparent;
+
+    -webkit-text-stroke:
+        1px rgba(255,255,255,0.65);
+
+    text-shadow:
+        0 0 45px rgba(0,229,255,0.10);
 
 }
 
 
 .hero-text {
 
-    max-width: 570px;
+    max-width:
+        570px;
 
-    color: var(--muted);
+    color:
+        var(--muted-light);
 
-    font-size: 18px;
+    font-size:
+        17px;
 
-    margin-bottom: 30px;
+    line-height:
+        1.8;
 
-}
-
-
-/* ---------- Hero Buttons ---------- */
-
-.hero-actions {
-
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 12px;
+    margin-bottom:
+        34px;
 
 }
 
 
 /* =========================================================
-   6. BUTTONS
+   11. BUTTONS
    ========================================================= */
 
-.btn {
+.hero-actions {
 
-    display: inline-flex;
+    display:
+        flex;
 
-    justify-content: center;
+    flex-wrap:
+        wrap;
 
-    align-items: center;
-
-    min-height: 46px;
-
-    padding:
-        0 19px;
-
-    border-radius: 10px;
-
-    text-decoration: none;
-
-    font-size: 14px;
-
-    font-weight: 700;
-
-    border:
-        1px solid transparent;
-
-    cursor: pointer;
-
-    transition:
-
-        transform 0.2s ease,
-
-        box-shadow 0.2s ease,
-
-        background 0.2s ease;
+    gap:
+        12px;
 
 }
 
 
-.btn:hover {
+.btn {
 
-    transform:
-        translateY(-2px);
+    min-height:
+        50px;
 
-    box-shadow:
+    display:
+        inline-flex;
 
-        0 8px 24px
-        rgba(32, 33, 36, 0.12);
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        18px;
+
+    padding:
+        0 20px;
+
+    border:
+        1px solid transparent;
+
+    border-radius:
+        10px;
+
+    text-decoration:
+        none;
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1.2px;
+
+    cursor:
+        pointer;
+
+    transition:
+        all 0.3s ease;
 
 }
 
@@ -401,67 +1026,456 @@ a {
 .btn-primary {
 
     background:
-        var(--blue);
+        var(--cyan);
 
     color:
-        var(--white);
+        #001014;
+
+    box-shadow:
+        0 0 35px rgba(0,229,255,0.18);
+
+}
+
+
+.btn-primary strong {
+
+    font-size:
+        17px;
+
+    transition:
+        transform 0.3s ease;
 
 }
 
 
 .btn-primary:hover {
 
-    background:
-        var(--blue-dark);
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 0 50px rgba(0,229,255,0.35);
+
+}
+
+
+.btn-primary:hover strong {
+
+    transform:
+        translateX(5px);
 
 }
 
 
 .btn-ghost {
 
-    background:
-        rgba(255,255,255,0.8);
-
     border-color:
-        var(--line);
+        var(--line-bright);
+
+    background:
+        rgba(255,255,255,0.035);
+
+    color:
+        var(--white);
+
+    backdrop-filter:
+        blur(12px);
 
 }
 
 
-.btn-dark {
+.btn-ghost:hover {
+
+    border-color:
+        rgba(0,229,255,0.45);
 
     background:
-        var(--text);
+        rgba(0,229,255,0.06);
 
-    color:
-        var(--white);
+    transform:
+        translateY(-3px);
 
 }
 
 
 /* =========================================================
-   7. GENERAL SECTIONS
+   12. HERO STATS
+   ========================================================= */
+
+.hero-stats {
+
+    display:
+        flex;
+
+    gap:
+        35px;
+
+    margin-top:
+        65px;
+
+}
+
+
+.hero-stat {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+
+}
+
+
+.hero-stat strong {
+
+    color:
+        var(--cyan);
+
+    font-family:
+        monospace;
+
+    font-size:
+        16px;
+
+}
+
+
+.hero-stat span {
+
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.5px;
+
+}
+
+
+/* =========================================================
+   13. HERO HUD
+   ========================================================= */
+
+.hero-hud {
+
+    position:
+        relative;
+
+    width:
+        240px;
+
+    height:
+        300px;
+
+    margin-right:
+        30px;
+
+    border:
+        1px solid rgba(0,229,255,0.20);
+
+    background:
+        rgba(5,10,14,0.18);
+
+    backdrop-filter:
+        blur(5px);
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    padding:
+        30px;
+
+    transform:
+        perspective(900px)
+        rotateY(-12deg)
+        rotateX(4deg);
+
+    animation:
+        hudFloat 5s ease-in-out infinite;
+
+}
+
+
+@keyframes hudFloat {
+
+    50% {
+        transform:
+            perspective(900px)
+            rotateY(-8deg)
+            rotateX(1deg)
+            translateY(-12px);
+    }
+
+}
+
+
+.hud-line {
+
+    width:
+        70px;
+
+    height:
+        2px;
+
+    margin-bottom:
+        22px;
+
+    background:
+        var(--cyan);
+
+    box-shadow:
+        0 0 15px var(--cyan);
+
+}
+
+
+.hud-label {
+
+    color:
+        var(--muted-light);
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.hud-number {
+
+    margin:
+        10px 0;
+
+    color:
+        rgba(255,255,255,0.92);
+
+    font-size:
+        68px;
+
+    font-weight:
+        950;
+
+    line-height:
+        1;
+
+}
+
+
+.hud-location {
+
+    color:
+        var(--cyan);
+
+    font-size:
+        8px;
+
+    font-family:
+        monospace;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.hud-corner {
+
+    position:
+        absolute;
+
+    width:
+        18px;
+
+    height:
+        18px;
+
+}
+
+
+.corner-one {
+
+    top:
+        -1px;
+
+    left:
+        -1px;
+
+    border-top:
+        2px solid var(--cyan);
+
+    border-left:
+        2px solid var(--cyan);
+
+}
+
+
+.corner-two {
+
+    bottom:
+        -1px;
+
+    right:
+        -1px;
+
+    border-bottom:
+        2px solid var(--cyan);
+
+    border-right:
+        2px solid var(--cyan);
+
+}
+
+
+/* =========================================================
+   14. HERO BOTTOM
+   ========================================================= */
+
+.hero-bottom {
+
+    position:
+        absolute;
+
+    left:
+        4%;
+
+    bottom:
+        28px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.scroll-line {
+
+    width:
+        60px;
+
+    height:
+        1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            transparent
+        );
+
+}
+
+
+/* =========================================================
+   15. GENERAL SECTION
    ========================================================= */
 
 .section {
 
     padding:
-        92px 0;
+        120px 0;
+
+}
+
+
+.inventory-section {
+
+    position:
+        relative;
 
 }
 
 
 .section-head {
 
-    display: flex;
+    display:
+        flex;
 
-    justify-content: space-between;
+    justify-content:
+        space-between;
 
-    align-items: flex-end;
+    align-items:
+        flex-end;
 
-    gap: 30px;
+    gap:
+        30px;
 
-    margin-bottom: 38px;
+    margin-bottom:
+        50px;
+
+}
+
+
+.section-title-wrap {
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        20px;
+
+}
+
+
+.section-number {
+
+    color:
+        rgba(0,229,255,0.45);
+
+    font-family:
+        monospace;
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    padding-top:
+        7px;
 
 }
 
@@ -471,11 +1485,16 @@ a {
 .contact-card h2 {
 
     font-size:
-        clamp(34px, 5vw, 50px);
+        clamp(40px, 5vw, 68px);
 
-    line-height: 1.08;
+    line-height:
+        0.98;
 
-    letter-spacing: -2px;
+    letter-spacing:
+        -3px;
+
+    font-weight:
+        900;
 
 }
 
@@ -485,34 +1504,73 @@ a {
     color:
         var(--muted);
 
-    font-size: 14px;
+    font-size:
+        11px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+}
+
+
+.live-indicator {
+
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--green);
+
+    box-shadow:
+        0 0 12px var(--green);
 
 }
 
 
 /* =========================================================
-   8. CAR GRID
+   16. CAR GRID
    ========================================================= */
 
 .car-grid {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 24px;
+    gap:
+        25px;
+
+    perspective:
+        1400px;
 
 }
 
 
 /* =========================================================
-   9. CAR CARD
+   17. CAR CARD
    ========================================================= */
 
 .car-card {
 
-    overflow: hidden;
+    position:
+        relative;
+
+    overflow:
+        hidden;
 
     border:
         1px solid var(--line);
@@ -521,17 +1579,60 @@ a {
         var(--radius);
 
     background:
-        var(--white);
+        linear-gradient(
+            145deg,
+            rgba(19,25,32,0.92),
+            rgba(7,10,14,0.96)
+        );
 
     box-shadow:
-        0 2px 8px
-        rgba(60,64,67,0.04);
+        0 20px 50px rgba(0,0,0,0.25);
+
+    transform:
+        translateZ(0);
 
     transition:
+        transform 0.45s cubic-bezier(.2,.8,.2,1),
+        border-color 0.35s ease,
+        box-shadow 0.45s ease;
 
-        transform 0.25s ease,
+}
 
-        box-shadow 0.25s ease;
+
+.car-card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        5;
+
+    pointer-events:
+        none;
+
+    opacity:
+        0;
+
+    background:
+        linear-gradient(
+            115deg,
+            transparent 30%,
+            rgba(0,229,255,0.10) 45%,
+            transparent 60%
+        );
+
+    transform:
+        translateX(-100%);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.8s ease;
 
 }
 
@@ -539,45 +1640,93 @@ a {
 .car-card:hover {
 
     transform:
-        translateY(-5px);
+        translateY(-12px)
+        rotateX(2deg)
+        rotateY(-1deg);
+
+    border-color:
+        rgba(0,229,255,0.30);
 
     box-shadow:
-        var(--shadow);
+        0 35px 80px rgba(0,0,0,0.55),
+        0 0 35px rgba(0,229,255,0.06);
+
+}
+
+
+.car-card:hover::before {
+
+    opacity:
+        1;
+
+    transform:
+        translateX(100%);
 
 }
 
 
 /* =========================================================
-   10. CAR IMAGE
+   18. CAR IMAGE
    ========================================================= */
 
 .car-image {
 
-    position: relative;
+    position:
+        relative;
 
     aspect-ratio:
         16 / 10;
 
-    background:
-        #f1f3f4;
+    overflow:
+        hidden;
 
-    overflow: hidden;
+    background:
+        #080c11;
+
+}
+
+
+.car-image::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent 55%,
+            rgba(0,0,0,0.72)
+        );
 
 }
 
 
 .car-image img {
 
-    width: 100%;
+    width:
+        100%;
 
-    height: 100%;
+    height:
+        100%;
 
-    object-fit: cover;
+    object-fit:
+        cover;
 
-    display: block;
+    display:
+        block;
 
     transition:
-        transform 0.35s ease;
+        transform 0.8s cubic-bezier(.2,.8,.2,1),
+        filter 0.5s ease;
 
 }
 
@@ -586,47 +1735,74 @@ a {
 .car-image img {
 
     transform:
-        scale(1.03);
+        scale(1.08);
+
+    filter:
+        saturate(1.08)
+        contrast(1.04);
 
 }
 
 
 /* =========================================================
-   11. RECENTLY ADDED BADGE
+   19. BADGE
    ========================================================= */
 
 .badge {
 
-    position: absolute;
+    position:
+        absolute;
 
-    top: 13px;
+    z-index:
+        4;
 
-    left: 13px;
+    top:
+        15px;
+
+    left:
+        15px;
 
     padding:
-        6px 9px;
+        7px 10px;
+
+    border:
+        1px solid rgba(0,229,255,0.30);
 
     border-radius:
         999px;
 
     background:
-        rgba(255,255,255,0.94);
+        rgba(3,9,13,0.72);
 
-    font-size: 11px;
+    backdrop-filter:
+        blur(10px);
 
-    font-weight: 800;
+    color:
+        var(--cyan);
+
+    font-size:
+        8px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    text-transform:
+        uppercase;
 
 }
 
 
 /* =========================================================
-   12. CAR INFORMATION
+   20. CAR INFO
    ========================================================= */
 
 .car-info {
 
     padding:
-        20px;
+        22px;
 
 }
 
@@ -634,45 +1810,66 @@ a {
 .car-brand {
 
     color:
-        var(--muted);
+        var(--cyan);
 
     font-size:
-        13px;
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        2px;
+
+    text-transform:
+        uppercase;
 
     margin-bottom:
-        2px;
+        7px;
 
 }
 
 
 .car-title {
 
+    color:
+        var(--white);
+
     font-size:
-        24px;
+        25px;
 
     line-height:
-        1.15;
+        1.1;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        -0.8px;
 
     margin-bottom:
-        15px;
+        18px;
 
 }
 
 
 /* =========================================================
-   13. CAR SPECIFICATIONS
+   21. CAR SPECS
    ========================================================= */
 
 .car-specs {
 
-    display: flex;
+    display:
+        flex;
 
-    flex-wrap: wrap;
+    flex-wrap:
+        wrap;
 
-    gap: 7px;
+    gap:
+        7px;
 
     margin-bottom:
-        19px;
+        20px;
 
 }
 
@@ -680,13 +1877,446 @@ a {
 .car-specs span {
 
     padding:
-        5px 8px;
+        6px 9px;
 
-    background:
-        var(--soft);
+    border:
+        1px solid var(--line);
 
     border-radius:
-        6px;
+        7px;
+
+    background:
+        rgba(255,255,255,0.025);
+
+    color:
+        var(--muted-light);
+
+    font-size:
+        9px;
+
+    transition:
+        all 0.25s ease;
+
+}
+
+
+.car-card:hover .car-specs span {
+
+    border-color:
+        rgba(0,229,255,0.12);
+
+}
+
+
+/* =========================================================
+   22. CAR BOTTOM
+   ========================================================= */
+
+.car-bottom {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+
+    padding-top:
+        17px;
+
+    border-top:
+        1px solid var(--line);
+
+}
+
+
+.price {
+
+    color:
+        var(--white);
+
+    font-size:
+        15px;
+
+    font-weight:
+        900;
+
+}
+
+
+.view-btn {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    color:
+        var(--cyan);
+
+    text-decoration:
+        none;
+
+    font-size:
+        9px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        1px;
+
+    text-transform:
+        uppercase;
+
+    transition:
+        all 0.25s ease;
+
+}
+
+
+.view-btn:hover {
+
+    letter-spacing:
+        1.5px;
+
+    text-shadow:
+        0 0 15px rgba(0,229,255,0.5);
+
+}
+
+
+/* =========================================================
+   23. IMAGE PLACEHOLDER
+   ========================================================= */
+
+.car-image-placeholder {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    color:
+        var(--muted);
+
+    font-family:
+        monospace;
+
+    font-size:
+        11px;
+
+    letter-spacing:
+        2px;
+
+    background:
+        repeating-linear-gradient(
+            45deg,
+            #080c11,
+            #080c11 10px,
+            #0b1016 10px,
+            #0b1016 20px
+        );
+
+}
+
+
+/* =========================================================
+   24. EMPTY / LOADING
+   ========================================================= */
+
+.empty-state {
+
+    grid-column:
+        1 / -1;
+
+    min-height:
+        250px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    padding:
+        60px 20px;
+
+    border:
+        1px dashed rgba(0,229,255,0.18);
+
+    border-radius:
+        var(--radius);
+
+    background:
+        rgba(255,255,255,0.018);
+
+    text-align:
+        center;
+
+}
+
+
+.empty-state h3 {
+
+    margin-bottom:
+        8px;
+
+    font-size:
+        16px;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.empty-state p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+
+}
+
+
+.loading-ring {
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    margin-bottom:
+        18px;
+
+    border:
+        2px solid rgba(0,229,255,0.12);
+
+    border-top-color:
+        var(--cyan);
+
+    border-radius:
+        50%;
+
+    animation:
+        spin 0.9s linear infinite;
+
+}
+
+
+@keyframes spin {
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   25. ABOUT
+   ========================================================= */
+
+.about-band {
+
+    position:
+        relative;
+
+    padding:
+        130px 0;
+
+    border-top:
+        1px solid var(--line);
+
+    border-bottom:
+        1px solid var(--line);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,229,255,0.035),
+            transparent 45%,
+            rgba(52,120,255,0.035)
+        );
+
+}
+
+
+.about-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        0.9fr 1.1fr;
+
+    gap:
+        100px;
+
+    align-items:
+        start;
+
+}
+
+
+.about-heading h2 span {
+
+    display:
+        block;
+
+    color:
+        var(--cyan);
+
+}
+
+
+.about-content {
+
+    padding-top:
+        12px;
+
+}
+
+
+.about-line {
+
+    width:
+        90px;
+
+    height:
+        2px;
+
+    margin-bottom:
+        28px;
+
+    background:
+        var(--cyan);
+
+    box-shadow:
+        0 0 20px rgba(0,229,255,0.4);
+
+}
+
+
+.about-content > p {
+
+    max-width:
+        650px;
+
+    color:
+        var(--muted-light);
+
+    font-size:
+        17px;
+
+    line-height:
+        1.9;
+
+}
+
+
+.about-points {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        20px;
+
+    margin-top:
+        45px;
+
+}
+
+
+.about-point {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        15px;
+
+    padding:
+        20px;
+
+    border:
+        1px solid var(--line);
+
+    border-radius:
+        14px;
+
+    background:
+        rgba(255,255,255,0.018);
+
+}
+
+
+.about-point > span {
+
+    color:
+        var(--cyan);
+
+    font-family:
+        monospace;
+
+    font-size:
+        10px;
+
+}
+
+
+.about-point strong {
+
+    display:
+        block;
+
+    margin-bottom:
+        4px;
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        1.5px;
+
+}
+
+
+.about-point p {
 
     color:
         var(--muted);
@@ -698,185 +2328,59 @@ a {
 
 
 /* =========================================================
-   14. CAR PRICE + VIEW BUTTON
-   ========================================================= */
-
-.car-bottom {
-
-    border-top:
-        1px solid var(--line);
-
-    padding-top:
-        15px;
-
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
-    gap: 12px;
-
-}
-
-
-.price {
-
-    font-size:
-        16px;
-
-    font-weight:
-        800;
-
-}
-
-
-.view-btn {
-
-    color:
-        var(--blue);
-
-    text-decoration:
-        none;
-
-    font-size:
-        13px;
-
-    font-weight:
-        800;
-
-}
-
-
-.view-btn:hover {
-
-    text-decoration:
-        underline;
-
-}
-
-
-/* =========================================================
-   15. EMPTY CAR STATE
-   ========================================================= */
-
-.empty-state {
-
-    grid-column:
-        1 / -1;
-
-    padding:
-        70px 20px;
-
-    border:
-        1px dashed #dadce0;
-
-    border-radius:
-        var(--radius);
-
-    background:
-        var(--soft);
-
-    text-align:
-        center;
-
-}
-
-
-.empty-state p {
-
-    color:
-        var(--muted);
-
-    margin-top:
-        5px;
-
-}
-
-
-/* =========================================================
-   16. ABOUT SECTION
-   ========================================================= */
-
-.about-band {
-
-    background:
-        var(--soft);
-
-    padding:
-        90px 0;
-
-}
-
-
-.about-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        0.9fr 1.1fr;
-
-    gap:
-        80px;
-
-    align-items:
-        start;
-
-}
-
-
-.about-grid > p {
-
-    color:
-        var(--muted);
-
-    font-size:
-        17px;
-
-    max-width:
-        650px;
-
-}
-
-
-/* =========================================================
-   17. CONTACT SECTION
+   26. CONTACT
    ========================================================= */
 
 .contact {
 
-    padding-top:
-        40px;
+    padding:
+        100px 0 130px;
 
 }
 
 
 .contact-card {
 
-    display: flex;
+    position:
+        relative;
 
-    justify-content:
-        space-between;
+    overflow:
+        hidden;
+
+    display:
+        flex;
 
     align-items:
         center;
+
+    justify-content:
+        space-between;
 
     gap:
         40px;
 
     padding:
-        45px;
+        60px;
 
     border:
-        1px solid var(--line);
+        1px solid rgba(0,229,255,0.18);
 
     border-radius:
-        var(--radius);
+        26px;
 
     background:
-        var(--white);
+
+        radial-gradient(
+            circle at 80% 50%,
+            rgba(0,229,255,0.08),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            135deg,
+            rgba(16,23,30,0.95),
+            rgba(7,10,14,0.96)
+        );
 
     box-shadow:
         var(--shadow);
@@ -884,31 +2388,98 @@ a {
 }
 
 
-.contact-card p:not(.eyebrow) {
+.contact-card::before {
 
-    color:
-        var(--muted);
+    content:
+        "";
 
-    margin-top:
-        12px;
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    height:
+        1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--cyan),
+            transparent
+        );
+
+    opacity:
+        0.7;
 
 }
 
 
-.contact-meta {
+.contact-glow {
 
-    display: flex;
+    position:
+        absolute;
 
-    flex-wrap: wrap;
+    width:
+        260px;
 
-    gap:
-        18px;
+    height:
+        260px;
 
-    margin-top:
-        20px;
+    right:
+        -100px;
+
+    top:
+        -100px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--cyan);
+
+    filter:
+        blur(120px);
+
+    opacity:
+        0.08;
+
+}
+
+
+.contact-content {
+
+    position:
+        relative;
+
+}
+
+
+.contact-card h2 span {
 
     color:
-        var(--muted);
+        var(--cyan);
+
+}
+
+
+.contact-description {
+
+    max-width:
+        550px;
+
+    margin-top:
+        18px;
+
+    color:
+        var(--muted-light);
 
     font-size:
         14px;
@@ -916,7 +2487,33 @@ a {
 }
 
 
+.contact-meta {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        20px;
+
+    margin-top:
+        25px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+}
+
+
 .contact-meta a {
+
+    color:
+        var(--muted-light);
 
     text-decoration:
         none;
@@ -927,57 +2524,215 @@ a {
 .contact-meta a:hover {
 
     color:
-        var(--blue);
+        var(--cyan);
+
+}
+
+
+.btn-whatsapp {
+
+    position:
+        relative;
+
+    flex-shrink:
+        0;
+
+    min-width:
+        190px;
+
+    border-color:
+        rgba(44,255,154,0.30);
+
+    background:
+        rgba(44,255,154,0.07);
+
+    color:
+        var(--green);
+
+}
+
+
+.btn-whatsapp:hover {
+
+    background:
+        rgba(44,255,154,0.13);
+
+    border-color:
+        rgba(44,255,154,0.55);
+
+    box-shadow:
+        0 0 35px rgba(44,255,154,0.12);
+
+    transform:
+        translateY(-3px);
+
+}
+
+
+.whatsapp-icon {
+
+    width:
+        25px;
+
+    height:
+        25px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        1px solid rgba(44,255,154,0.30);
+
+    border-radius:
+        50%;
 
 }
 
 
 /* =========================================================
-   18. CAR DETAILS PAGE
+   27. FOOTER
    ========================================================= */
 
-.details-page {
+.footer {
 
     padding:
-        55px 0 100px;
+        30px 0;
 
-    min-height:
-        70vh;
+    border-top:
+        1px solid var(--line);
+
+    background:
+        #030507;
 
 }
 
 
-/* ---------- Back Link ---------- */
-
-.back-link {
+.footer-inner {
 
     display:
-        inline-block;
+        flex;
 
-    margin-bottom:
-        28px;
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+}
+
+
+.footer-brand {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+}
+
+
+.footer-brand div {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.footer strong {
+
+    color:
+        var(--white);
+
+    font-size:
+        10px;
+
+    letter-spacing:
+        1.5px;
+
+}
+
+
+.footer-brand span:not(.brand-mark) {
 
     color:
         var(--muted);
 
-    text-decoration:
-        none;
-
     font-size:
-        14px;
+        9px;
+
+    margin-top:
+        2px;
 
 }
 
 
-.back-link:hover {
+.footer-center {
 
     color:
-        var(--blue);
+        var(--muted);
+
+    font-size:
+        8px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1.5px;
 
 }
 
 
-/* ---------- Details Layout ---------- */
+.footer-center span {
+
+    color:
+        var(--cyan);
+
+    padding:
+        0 8px;
+
+}
+
+
+.footer-copy {
+
+    color:
+        var(--muted);
+
+    font-size:
+        9px;
+
+}
+
+
+/* =========================================================
+   28. DETAILS PAGE SUPPORT
+   ========================================================= */
+
+.details-page {
+
+    min-height:
+        70vh;
+
+    padding:
+        70px 0 120px;
+
+}
+
 
 .details-layout {
 
@@ -988,28 +2743,27 @@ a {
         1.15fr 0.85fr;
 
     gap:
-        55px;
-
-    align-items:
-        start;
+        50px;
 
 }
 
 
-/* =========================================================
-   19. CAR IMAGE GALLERY
-   ========================================================= */
-
 .gallery-main {
 
-    border-radius:
-        var(--radius);
+    position:
+        relative;
 
     overflow:
         hidden;
 
+    border:
+        1px solid var(--line);
+
+    border-radius:
+        var(--radius);
+
     background:
-        var(--soft);
+        #080c11;
 
     aspect-ratio:
         16 / 10;
@@ -1025,16 +2779,25 @@ a {
     height:
         100%;
 
+    object-fit:
+        cover;
+
     display:
         block;
 
-    object-fit:
-        cover;
+    transition:
+        transform 0.5s ease;
 
 }
 
 
-/* ---------- Gallery Thumbnails ---------- */
+.gallery-main:hover img {
+
+    transform:
+        scale(1.025);
+
+}
+
 
 .gallery-thumbs {
 
@@ -1055,26 +2818,29 @@ a {
 
 .thumb {
 
-    border:
-        2px solid transparent;
-
     padding:
         0;
-
-    border-radius:
-        8px;
 
     overflow:
         hidden;
 
+    aspect-ratio:
+        1.4;
+
+    border:
+        2px solid transparent;
+
+    border-radius:
+        9px;
+
     background:
-        var(--soft);
+        #080c11;
 
     cursor:
         pointer;
 
-    aspect-ratio:
-        1.4;
+    transition:
+        all 0.25s ease;
 
 }
 
@@ -1082,7 +2848,18 @@ a {
 .thumb.active {
 
     border-color:
-        var(--blue);
+        var(--cyan);
+
+    box-shadow:
+        0 0 18px rgba(0,229,255,0.16);
+
+}
+
+
+.thumb:hover {
+
+    border-color:
+        rgba(0,229,255,0.4);
 
 }
 
@@ -1098,20 +2875,21 @@ a {
     object-fit:
         cover;
 
-    display:
-        block;
+}
+
+
+.details-info {
+
+    padding-top:
+        10px;
 
 }
 
 
-/* =========================================================
-   20. DETAILS INFORMATION
-   ========================================================= */
-
 .details-info .car-brand {
 
     font-size:
-        14px;
+        10px;
 
 }
 
@@ -1119,34 +2897,33 @@ a {
 .details-info h1 {
 
     font-size:
-        clamp(42px, 6vw, 65px);
+        clamp(44px, 6vw, 75px);
 
     line-height:
-        1;
+        0.92;
 
     letter-spacing:
-        -3px;
+        -4px;
 
     margin:
-        5px 0 22px;
+        8px 0 25px;
 
 }
 
 
 .details-price {
 
-    font-size:
-        23px;
-
     margin-bottom:
-        27px;
+        30px;
+
+    color:
+        var(--cyan);
+
+    font-size:
+        24px;
 
 }
 
-
-/* =========================================================
-   21. SPECIFICATION TABLE
-   ========================================================= */
 
 .spec-table {
 
@@ -1156,10 +2933,7 @@ a {
     grid-template-columns:
         1fr 1fr;
 
-    border-top:
-        1px solid var(--line);
-
-    border-left:
+    border:
         1px solid var(--line);
 
     margin-bottom:
@@ -1170,6 +2944,9 @@ a {
 
 .spec-item {
 
+    min-height:
+        72px;
+
     padding:
         13px 15px;
 
@@ -1179,6 +2956,17 @@ a {
     border-bottom:
         1px solid var(--line);
 
+    background:
+        rgba(255,255,255,0.015);
+
+}
+
+
+.spec-item:nth-child(even) {
+
+    border-right:
+        0;
+
 }
 
 
@@ -1187,14 +2975,23 @@ a {
     display:
         block;
 
+    margin-bottom:
+        4px;
+
     color:
         var(--muted);
 
     font-size:
-        11px;
+        8px;
 
-    margin-bottom:
-        2px;
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+    text-transform:
+        uppercase;
 
 }
 
@@ -1202,29 +2999,27 @@ a {
 .spec-item strong {
 
     font-size:
-        14px;
+        13px;
 
 }
 
 
-/* =========================================================
-   22. DESCRIPTION
-   ========================================================= */
-
 .details-description {
 
     color:
-        var(--muted);
+        var(--muted-light);
+
+    font-size:
+        13px;
+
+    line-height:
+        1.8;
 
     margin-bottom:
         25px;
 
 }
 
-
-/* =========================================================
-   23. DETAILS ACTIONS
-   ========================================================= */
 
 .details-actions {
 
@@ -1237,9 +3032,24 @@ a {
 }
 
 
-/* =========================================================
-   24. SHARE BUTTON
-   ========================================================= */
+.details-actions .btn {
+
+    width:
+        100%;
+
+}
+
+
+.btn-dark {
+
+    background:
+        var(--cyan);
+
+    color:
+        #001014;
+
+}
+
 
 .share-btn {
 
@@ -1247,51 +3057,116 @@ a {
         100%;
 
     min-height:
-        46px;
+        48px;
 
     border:
-        1px solid var(--line);
+        1px solid var(--line-bright);
 
     border-radius:
         10px;
 
     background:
+        rgba(255,255,255,0.025);
+
+    color:
         var(--white);
 
     cursor:
         pointer;
 
+    font-size:
+        10px;
+
     font-weight:
-        700;
+        900;
+
+    letter-spacing:
+        1px;
 
     transition:
-
-        background 0.2s ease,
-
-        transform 0.2s ease;
+        all 0.25s ease;
 
 }
 
 
 .share-btn:hover {
 
+    border-color:
+        rgba(0,229,255,0.35);
+
     background:
-        var(--soft);
+        rgba(0,229,255,0.05);
 
     transform:
-        translateY(-1px);
+        translateY(-2px);
 
 }
 
 
 /* =========================================================
-   25. NOT FOUND PAGE
+   29. BACK LINK
+   ========================================================= */
+
+.back-link {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        28px;
+
+    color:
+        var(--muted);
+
+    text-decoration:
+        none;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.back-link:hover {
+
+    color:
+        var(--cyan);
+
+}
+
+
+/* =========================================================
+   30. NOT FOUND
    ========================================================= */
 
 .not-found {
 
-    padding:
-        100px 20px;
+    min-height:
+        400px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
 
     text-align:
         center;
@@ -1299,68 +3174,48 @@ a {
 }
 
 
-.not-found p {
-
-    color:
-        var(--muted);
-
-    margin:
-        8px 0 20px;
-
-}
-
-
-/* =========================================================
-   26. FOOTER
-   ========================================================= */
-
-.footer {
-
-    border-top:
-        1px solid var(--line);
-
-    padding:
-        30px 0;
-
-    color:
-        var(--muted);
+.not-found h2 {
 
     font-size:
-        13px;
+        48px;
+
+    letter-spacing:
+        -2px;
 
 }
 
 
-.footer-inner {
+.not-found p {
 
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    gap:
-        20px;
-
-}
-
-
-.footer strong {
+    margin:
+        10px 0 25px;
 
     color:
-        var(--text);
+        var(--muted);
 
 }
 
 
 /* =========================================================
-   27. TABLET RESPONSIVE
+   31. TABLET
    ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
 
 
-    /* Cars */
+    .hero-hud {
+
+        width:
+            190px;
+
+        height:
+            250px;
+
+        margin-right:
+            0;
+
+    }
+
 
     .car-grid {
 
@@ -1370,7 +3225,16 @@ a {
     }
 
 
-    /* Details */
+    .about-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            55px;
+
+    }
+
 
     .details-layout {
 
@@ -1380,42 +3244,30 @@ a {
     }
 
 
-    /* About */
-
-    .about-grid {
-
-        grid-template-columns:
-            1fr;
-
-        gap:
-            25px;
-
-    }
-
-
-    .details-info {
-
-        max-width:
-            700px;
-
-    }
-
 }
 
 
 /* =========================================================
-   28. MOBILE RESPONSIVE
+   32. MOBILE
    ========================================================= */
 
 @media (max-width: 700px) {
 
 
-    /* ---------- Header ---------- */
+    .container {
+
+        width:
+            min(92%, 560px);
+
+    }
+
+
+    /* Header */
 
     .site-header {
 
-        min-height:
-            68px;
+        height:
+            70px;
 
     }
 
@@ -1423,7 +3275,10 @@ a {
     .menu-toggle {
 
         display:
-            block;
+            grid;
+
+        place-items:
+            center;
 
     }
 
@@ -1437,7 +3292,7 @@ a {
             absolute;
 
         top:
-            68px;
+            62px;
 
         left:
             0;
@@ -1446,25 +3301,31 @@ a {
             0;
 
         padding:
-            12px;
+            10px;
 
         flex-direction:
             column;
 
-        gap:
-            0;
+        align-items:
+            stretch;
 
-        background:
-            white;
+        gap:
+            3px;
 
         border:
-            1px solid var(--line);
+            1px solid var(--line-bright);
 
         border-radius:
-            12px;
+            14px;
+
+        background:
+            rgba(8,12,17,0.96);
+
+        backdrop-filter:
+            blur(20px);
 
         box-shadow:
-            var(--shadow);
+            0 25px 60px rgba(0,0,0,0.5);
 
     }
 
@@ -1480,18 +3341,36 @@ a {
     .nav a {
 
         padding:
-            12px;
+            14px;
 
     }
 
 
-    /* ---------- Hero ---------- */
+    /* Hero */
 
-    .hero,
+    .hero {
+
+        min-height:
+            700px;
+
+    }
+
+
     .hero-inner {
 
         min-height:
-            560px;
+            700px;
+
+        align-items:
+            flex-end;
+
+    }
+
+
+    .hero-image {
+
+        background-position:
+            62% center;
 
     }
 
@@ -1499,25 +3378,100 @@ a {
     .hero-overlay {
 
         background:
-            rgba(255,255,255,0.90);
+            linear-gradient(
+                180deg,
+                rgba(5,7,10,0.55),
+                rgba(5,7,10,0.82) 50%,
+                rgba(5,7,10,1) 100%
+            );
+
+    }
+
+
+    .hero-grid {
+
+        opacity:
+            0.15;
+
+    }
+
+
+    .hero-copy {
+
+        padding:
+            80px 0 80px;
+
+    }
+
+
+    .hero-status {
+
+        margin-bottom:
+            20px;
 
     }
 
 
     .hero h1 {
 
+        font-size:
+            clamp(58px, 17vw, 86px);
+
         letter-spacing:
-            -2.5px;
+            -4px;
 
     }
 
 
-    /* ---------- Sections ---------- */
+    .hero-text {
+
+        font-size:
+            15px;
+
+    }
+
+
+    .hero-hud {
+
+        display:
+            none;
+
+    }
+
+
+    .hero-stats {
+
+        gap:
+            20px;
+
+        margin-top:
+            45px;
+
+    }
+
+
+    .hero-stat span {
+
+        font-size:
+            7px;
+
+    }
+
+
+    .hero-bottom {
+
+        display:
+            none;
+
+    }
+
+
+    /* Sections */
 
     .section {
 
         padding:
-            70px 0;
+            85px 0;
 
     }
 
@@ -1527,20 +3481,65 @@ a {
         display:
             block;
 
+        margin-bottom:
+            35px;
+
     }
 
 
     .section-note {
 
         margin-top:
-            10px;
+            18px;
 
     }
 
 
-    /* ---------- Cars ---------- */
+    .section-head h2,
+    .about-grid h2,
+    .contact-card h2 {
+
+        font-size:
+            43px;
+
+        letter-spacing:
+            -2px;
+
+    }
+
+
+    /* Cars */
 
     .car-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            18px;
+
+    }
+
+
+    .car-card:hover {
+
+        transform:
+            translateY(-6px);
+
+    }
+
+
+    /* About */
+
+    .about-band {
+
+        padding:
+            90px 0;
+
+    }
+
+
+    .about-points {
 
         grid-template-columns:
             1fr;
@@ -1548,7 +3547,15 @@ a {
     }
 
 
-    /* ---------- Contact ---------- */
+    /* Contact */
+
+    .contact {
+
+        padding:
+            70px 0 90px;
+
+    }
+
 
     .contact-card {
 
@@ -1556,47 +3563,78 @@ a {
             block;
 
         padding:
+            35px 25px;
+
+    }
+
+
+    .btn-whatsapp {
+
+        width:
+            100%;
+
+        margin-top:
             30px;
 
     }
 
 
-    .contact-card .btn {
-
-        margin-top:
-            25px;
-
-        width:
-            100%;
-
-    }
-
-
-    /* ---------- Footer ---------- */
+    /* Footer */
 
     .footer-inner {
 
         flex-direction:
             column;
 
+        align-items:
+            flex-start;
+
     }
+
+
+    .footer-center {
+
+        display:
+            none;
+
+    }
+
+
+    /* Details */
+
+    .details-page {
+
+        padding:
+            45px 0 80px;
+
+    }
+
+
+    .details-info h1 {
+
+        font-size:
+            48px;
+
+        letter-spacing:
+            -3px;
+
+    }
+
 
 }
 
 
 /* =========================================================
-   29. SMALL MOBILE
+   33. SMALL MOBILE
    ========================================================= */
 
-@media (max-width: 480px) {
+@media (max-width: 420px) {
 
 
-    /* Hero */
+    .brand-main {
 
-    .hero-copy {
-
-        padding:
-            50px 0;
+        font-size:
+            15px;
 
     }
 
@@ -1604,15 +3642,15 @@ a {
     .hero h1 {
 
         font-size:
-            45px;
+            56px;
 
     }
 
 
-    .hero-text {
+    .hero-actions {
 
-        font-size:
-            16px;
+        display:
+            grid;
 
     }
 
@@ -1625,20 +3663,66 @@ a {
     }
 
 
-    /* Details */
+    .hero-stats {
 
-    .details-page {
-
-        padding-top:
-            40px;
+        justify-content:
+            space-between;
 
     }
 
 
-    .details-info h1 {
+    .hero-stat strong {
 
         font-size:
-            42px;
+            14px;
+
+    }
+
+
+    .hero-stat span {
+
+        font-size:
+            6px;
+
+        letter-spacing:
+            0.8px;
+
+    }
+
+
+    .section-head h2,
+    .about-grid h2,
+    .contact-card h2 {
+
+        font-size:
+            38px;
+
+    }
+
+
+    .car-info {
+
+        padding:
+            18px;
+
+    }
+
+
+    .car-title {
+
+        font-size:
+            22px;
+
+    }
+
+
+    .contact-meta {
+
+        flex-direction:
+            column;
+
+        gap:
+            8px;
 
     }
 
@@ -1650,12 +3734,5 @@ a {
 
     }
 
-
-    .spec-table {
-
-        grid-template-columns:
-            1fr 1fr;
-
-    }
 
 }
