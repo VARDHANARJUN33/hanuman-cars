@@ -23,7 +23,7 @@ const BUSINESS = {
 
 // TEST URL while testing in n8n
 const CARS_API_URL =
-    "https://cricwith27.app.n8n.cloud/webhook/cars";
+    "https://cricwith27.app.n8n.cloud/webhook-test/cars";
 
 // After activating n8n, change to:
 // https://cricwith27.app.n8n.cloud/webhook/cars
